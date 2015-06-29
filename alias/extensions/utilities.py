@@ -28,6 +28,8 @@ def all_in(framework):
     for arg in framework.get_arguments():
         allin[arg] = al.Label.inlabel
 
+    return allin
+
 # Given an argumentation framework, generate and return
 # a labelling where all arguements are labelled out
 def all_out(framework):
@@ -35,12 +37,16 @@ def all_out(framework):
     for arg in framework.get_arguments():
         allout[arg] = al.Label.outlabel
 
+    return allout
+
 # Given an argumentation framework, generate and return
 # a labelling where all arguements are labelled in
 def all_undec(framework):
     allundec = {}
     for arg in framework.get_arguments():
         undec[arg] = al.Label.undeclabel 
+
+    return allundec
 
 # Given a labelling, return the set of all in-labelled arguments
 def in_labels(labelling):
@@ -131,13 +137,13 @@ def is_illegally_in(argument, framework, labelling):
 
 # Determines whether a given argument is illegally out within a given labelling
 def is_illegally_out(argument, framework, labelling):
-    if labelling[argument] is not Label.inlabel:
+    if labelling[argument] is not Label.outlabel:
         raise LabelException("Argument is not labelled OUT")
     return not is_legally_out(argument, framework, labelling)
 
 # Determines whether a given argument is illegally undecided within a given labelling
 def is_illegally_undec(argument, framework, labelling):
-    if labelling[argument] is not Label.inlabel:
+    if labelling[argument] is not Label.undeclabel:
         raise LabelException("Argument is not labelled UNDECIDED")
     return not is_legally_undec(argument, framework, labelling)
 
@@ -208,5 +214,6 @@ def powerset(framework):
         powerset.extend([subset + [arg] for subset in powerset])
     return powerset
 
-
-
+# Returns a list of all possible labellings of a given framework - recursive function
+def powerlabelling(framework, labellings):
+    l = all_undec(framework)

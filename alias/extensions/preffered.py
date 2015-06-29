@@ -1,25 +1,20 @@
 import alias as al
 
 def preffered_labellings(framework):
-	def all_in(framework):
-		allin = al.generate_labelling(framework)
-		for arg in allin.keys():
-			allin[arg] = al.Label.inlabel
-		return allin
+    allin = al.all_in(framework)
 
-	def transition_step(l, x):
-		l[arg] = Label.outlabel
-		for a in l.keys():
-			if is_illegally_out(a, framework, l):
-				l[a] = label.undeclabel
+    def transition_step(l, x):
+        l[x] = al.Label.outlabel
+        for arg in l.keys():
+            if l[arg] is al.Label.outlabel:
+                if al.is_illegally_out(arg, framework, l):
+                    l[arg] = al.Label.undeclabel
 
-	candidates = []
-	candidates.append(all_in(framework))
+    candidates = []
+    candidates.append(allin)
 
-	for arg in candidates[0].keys():
-		if al.is_illegally_in(arg, framework, candidates[0]):
-			print arg
-			# transition_step(candidates[0], arg)
-
-	return 
-
+    for l in candidates:
+        for arg in l.keys():
+            if l[arg] is al.Label.inlabel:
+                if al.is_illegally_in(arg, framework, l):
+                    transition_step(l, arg)
