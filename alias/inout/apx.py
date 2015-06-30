@@ -22,7 +22,7 @@ def read_apx(path):
 
 
 	try:
-		from pyparsing import Word, Literal, nums, Keyword, Group, OneOrMore, Suppress
+		from pyparsing import Word, Literal, nums, alphas, alphanums, Keyword, Group, OneOrMore, Suppress
 	except ImportError:
 		raise ImportError("read_apx requires pyparsing")
 
