@@ -1,5 +1,6 @@
 import alias as al
 from enum import Enum
+from sets import Set
 
 """
 Labelling Utilities
@@ -49,27 +50,27 @@ def all_undec(framework):
     return allundec
 
 # Given a labelling, return the set of all in-labelled arguments
-def in_labels(labelling):
-    inargs = []
+def in_args(labelling):
+    inargs = set()
     for arg, label in labelling.iteritems():
         if label is al.Label.inlabel:
-            inargs.append(arg)
+            inargs.add(arg)
     return inargs
 
 # Given a labelling, return the set of all out-labelled arguments
-def out_labels(labelling):
-    outargs = []
+def out_args(labelling):
+    outargs = set()
     for arg, label in labelling.iteritems():
         if label is al.Label.outlabel:
-            outargs.append(arg)
+            outargs.add(arg)
     return outargs
 
 # Given a labelling, return the set of all undecided-labelled arguments
-def undec_labels(labelling):
-    undecargs = []
+def undec_args(labelling):
+    undecargs = set()
     for arg, label in labelling.iteritems():
         if label is al.Label.undeclabel:
-            undecards.append(arg)
+            undecards.add(arg)
     return undecargs
 
 # Returns a list of all possible labellings for a given framework
@@ -156,20 +157,21 @@ def is_super_illegally_in(argument, framework, labelling):
     sii = False
 
     for att in attackers:
-        if is_legally_in(att, framework, labelling):
-            sii = True
-            break
+        if labelling[att] is Label.inlabel:
+            if is_legally_in(att, framework, labelling):
+                sii = True
+                break
     return sii
 
 # Determines whether a given labelling is an admissible labelling
 def is_admissible(framework, labelling):
     admissible = True
-    for arg, labelling in labelling.iteritems():
-        if labelling is Label.inlabel:
+    for arg, l in labelling.iteritems():
+        if l is Label.inlabel:
             if is_illegally_in(arg, framework, labelling):
                 admissible = False
                 break
-        if labelling is Label.outlabel:
+        if l is Label.outlabel:
             if is_illegally_out(arg, framework, labelling):
                 admissible = False
                 break
