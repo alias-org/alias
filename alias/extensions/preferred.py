@@ -1,6 +1,10 @@
 import alias as al
 
 def transition_step(l, a, framework):
+<<<<<<< HEAD
+=======
+    l = l.copy()
+>>>>>>> d49a3134b9fa5b721c0a0db8d10a46798132f52e
     l[a] = al.Label.outlabel
     for arg in l.keys():
         if l[arg] is al.Label.outlabel:
@@ -53,6 +57,9 @@ def preferred_labellings(framework):
                             transition_step(labelling, arg, framework)
                             find_labellings(labelling)
 
+<<<<<<< HEAD
     
+=======
+>>>>>>> d49a3134b9fa5b721c0a0db8d10a46798132f52e
     find_labellings(al.all_in(framework))
     return candidatelabellings
