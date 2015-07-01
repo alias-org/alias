@@ -1,11 +1,10 @@
 import alias as al
-from enum import Enum
 
 class ArgumentationFramework(object):
 
     def __init__(self):
         self.framework = {}
-        self.labellings = {}
+        self.labellings = []
 
     def __contains__(self, arg):
         return arg in self.framework
@@ -16,7 +15,7 @@ class ArgumentationFramework(object):
 
     # Return a list of all attack tuples in the AF
     def get_attacks(self):
-    	return self.__generate_attacks()
+        return self.__generate_attacks()
 
     # Add an argument to the AF, takes the argument's name as input.  If the argument already exists, break
     def add_argument(self, argumentname):
@@ -25,12 +24,14 @@ class ArgumentationFramework(object):
         else:
             newarg = al.Argument(argumentname)
             self.framework[argumentname] = newarg
+            for l in self.labellings:
+                l.undefined.add(argumentname)
 
     # Adds an attack to the AF, if the attacker or target do not exist, add them to the AF
     def add_attack(self, attacker, target):
         self.add_argument(attacker)
         self.add_argument(target)
-        self.framework[attacker].attacks.append(target)
+        self.framework[attacker].attacks.add(target)
 
     # Returns a list of all the arguments that a given argument attacks
     def get_attacking(self, argument):
@@ -46,6 +47,9 @@ class ArgumentationFramework(object):
                 attackers.append(att[0])
         return attackers
 
+    def argument_exists(self, argument):
+        return argument in self.framework
+
     def __generate_attacks(self):
         attacks = []
         for arg in self.get_arguments():
@@ -53,14 +57,39 @@ class ArgumentationFramework(object):
                 attacks.append((arg, target))
         return attacks
 
-"""
-class _Labelling(object):
-    def __init__(self):
-        self.inargs = []
-        self.outargs = []
-        self.undecargs = []
+    """
+    Labelling Creation Methods
+    """
 
-    def __str__(self):
-        string = '{\'in\': ' + str(self.inargs) + ', ' + '\'out\': ' + str(self.outargs) + ', ' + '\'undec\': ' + str(self.undecargs) + '}'
-        return string   
-"""
+    def generate_blank_labelling(self):
+        l = al.Labelling(self)
+        for arg in self.get_arguments():
+            l.undefined.add(arg)
+        self.labellings.append(l)
+        return l
+
+    def generate_all_in(self):
+        l = al.Labelling(self)
+        for arg in self.get_arguments():
+            l.inargs.add(arg)
+        self.labellings.append(l)
+        return l
+
+    def generate_all_out(self):
+        l = al.Labelling(self)
+        for arg in self.get_arguments():
+            l.outargs.add(arg)
+        self.labellings.append(l)
+        return l
+
+    def generate_all_undecided(self):
+        l = al.Labelling(self)
+        for arg in self.get_arguments():
+            l.undecargs.add(arg)
+        self.labellings.append(l)
+        return l
+
+    def power_labelling(self):
+        """TODO"""
+
+

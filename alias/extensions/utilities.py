@@ -1,82 +1,4 @@
 import alias as al
-from enum import Enum
-from sets import Set
-
-"""
-Labelling Utilities
-"""
-# Defines a label
-class Label(Enum):
-    outlabel = -1
-    undeclabel = 0
-    inlabel = 1
-
-# Defines a new label exception to raise if wrong argument method is called
-class LabelException(Exception):
-    pass
-
-# Given an argumentation framework, generate a blank labelling dictionary and return it
-def generate_labelling(framework):
-    labelling = {}
-    for arg in framework.get_arguments():
-        labelling[arg] = None
-    
-    return labelling
-
-# Given an argumentation framework, generate a labelling where all arguements are labelled in
-def all_in(framework):
-    allin = {}
-    for arg in framework.get_arguments():
-        allin[arg] = al.Label.inlabel
-
-    return allin
-
-# Given an argumentation framework, generate and return
-# a labelling where all arguements are labelled out
-def all_out(framework):
-    allout = {}
-    for arg in framework.get_arguments():
-        allout[arg] = al.Label.outlabel
-
-    return allout
-
-# Given an argumentation framework, generate and return
-# a labelling where all arguements are labelled in
-def all_undec(framework):
-    allundec = {}
-    for arg in framework.get_arguments():
-        undec[arg] = al.Label.undeclabel 
-
-    return allundec
-
-# Given a labelling, return the set of all in-labelled arguments
-def in_args(labelling):
-    inargs = set()
-    for arg, label in labelling.iteritems():
-        if label is al.Label.inlabel:
-            inargs.add(arg)
-    return inargs
-
-# Given a labelling, return the set of all out-labelled arguments
-def out_args(labelling):
-    outargs = set()
-    for arg, label in labelling.iteritems():
-        if label is al.Label.outlabel:
-            outargs.add(arg)
-    return outargs
-
-# Given a labelling, return the set of all undecided-labelled arguments
-def undec_args(labelling):
-    undecargs = set()
-    for arg, label in labelling.iteritems():
-        if label is al.Label.undeclabel:
-            undecards.add(arg)
-    return undecargs
-
-# Returns a list of all possible labellings for a given framework
-def power_labelling(framework):
-    """TODO"""
-
 """
 Argument Utilities
 """
@@ -112,23 +34,7 @@ def is_legally_out(argument, framework, labelling):
     
     return onein
 
-# Determines whether a given argument is legally undecided within a given labelling
-def is_legally_undec(argument, framework, labelling):
-    if labelling[argument] is not Label.undeclabel:
-        raise LabelException("Argument is not labelled UNDECIDED")
 
-    attackers = framework.get_attackers(argument)
-    notallout = False
-    notonein = True
-
-    for att in attackers:
-        if labelling[att] is Label.inlabel:
-            notonein = False
-            break
-        if labelling[att] is Label.undeclabel:
-            notallout = True
-
-    return (notallout & notonein)
 
 # Determines whether a given argument is illegally in within a given labelling
 def is_illegally_in(argument, framework, labelling):
