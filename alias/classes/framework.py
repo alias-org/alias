@@ -13,6 +13,9 @@ class ArgumentationFramework(object):
     def get_arguments(self):
         return self.framework.keys()
 
+    def get_arg_obj(self, argref):
+        return self.framework[argref]
+
     # Return a list of all attack tuples in the AF
     def get_attacks(self):
         return self.__generate_attacks()
@@ -89,7 +92,10 @@ class ArgumentationFramework(object):
         self.labellings.append(l)
         return l
 
-    def power_labelling(self):
-        """TODO"""
+    def generate_power_labelling(self):
+        labellings = []
+        l = self.generate_all_in()
+        labellings.append(l)
+        return l
 
 

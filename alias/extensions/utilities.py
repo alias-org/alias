@@ -2,38 +2,6 @@ import alias as al
 """
 Argument Utilities
 """
-# Determines whether a given argument is illegally in within a given labelling
-def is_illegally_in(argument, framework, labelling):
-    if labelling[argument] is not Label.inlabel:
-        raise LabelException("Argument is not labelled IN")
-    return not is_legally_in(argument, framework, labelling)
-
-# Determines whether a given argument is illegally out within a given labelling
-def is_illegally_out(argument, framework, labelling):
-    if labelling[argument] is not Label.outlabel:
-        raise LabelException("Argument is not labelled OUT")
-    return not is_legally_out(argument, framework, labelling)
-
-# Determines whether a given argument is illegally undecided within a given labelling
-def is_illegally_undec(argument, framework, labelling):
-    if labelling[argument] is not Label.undeclabel:
-        raise LabelException("Argument is not labelled UNDECIDED")
-    return not is_legally_undec(argument, framework, labelling)
-
-# Determines whether a given argument is super-illegaly in for a given labelling
-def is_super_illegally_in(argument, framework, labelling):
-    if labelling[argument] is not Label.inlabel:
-        raise LabelException("Argument is not labelled IN")
-
-    attackers = framework.get_attackers(argument)
-    sii = False
-
-    for att in attackers:
-        if labelling[att] is Label.inlabel:
-            if is_legally_in(att, framework, labelling):
-                sii = True
-                break
-    return sii
 
 # Determines whether a given labelling is an admissible labelling
 def is_admissible(framework, labelling):
