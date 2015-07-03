@@ -1,53 +1,43 @@
 import alias as al
 
-# Implementation of Dung's grounded labelling framework extension semantics.
-# Takes an AF as input and returns the framework with the semantics implemented and arguments labelled.
-def grounded_labelling(framework):
-    newlabel = True
-    arguments = framework.get_arguments()
-    inargs = []
-    outargs = []
+def generate_grounded(af):
+    l = af.generate_blank_labelling()
 
-    while(newlabel == True):
-        newlabel = False
+    for arg in af.get_arguments():
+        if not af.get_attackers(arg):
+            l.labelling[arg] = al.Label.inlabel
+            l.undefargs.remove(arg)
+            l.inargs.add(arg)
 
-        for arg in arguments:
-            if len(framework.get_attackers(arg)) == 0:
-                if ((arg.label is None) or (arg.label == al.Label.outlabel)):
-                    arg.label = al.Label.inlabel
-                    inargs.append(arg.name)
-                    newlabel = True
+    iterate = True
 
-        for arg in arguments:
-            for att in framework.get_attackers(arg):
-                if (att.name in inargs):
-                    if ((arg.label is None) or (arg.label == al.Label.inlabel)):
-                        arg.label = al.Label.outlabel
-                        outargs.append(arg.name)
-                        newlabel = True
+    while iterate:
+        iterate = False
+        for arg in l.undefargs.copy():
+            for att in af.get_attackers(arg):
+                if att in l.inargs:
+                    l.labelling[arg] = al.Label.outlabel
+                    l.outargs.add(arg)
+                    l.undefargs.remove(arg)
+                    iterate = True
+                    break
 
-        for arg in arguments:
+        for arg in l.undefargs.copy():
             allout = True
-            for att in framework.get_attackers(arg):
-                if (att.name not in outargs):
+            for att in af.get_attackers(arg):
+                if att not in l.outargs:
                     allout = False
+                    break
 
-            if allout == True:
-                if ((arg.label is None) or (arg.label == al.Label.outlabel)):
-                    arg.label = al.Label.inlabel
-                    inargs.append(arg.name)
-                    newlabel = True
+            if allout:
+                l.labelling[arg] = al.Label.inlabel
+                l.inargs.add(arg)
+                l.undefargs.remove(arg)
+                iterate = True
 
-    for arg in arguments:
-        if arg.label is None:
-            arg.label = al.Label.undeclabel
+    for arg in l.undefargs.copy():
+        l.labelling[arg] = al.Label.undeclabel
+        l.undecargs.add(arg)
+        l.undefargs.remove(arg)
 
-    newframework = al.ArgumentationFramework()
-
-    for arg in arguments:
-    	newframework.add_argument(arg.name)
-   	
-   	for att in framework.get_attacks():
-   		newframework.add_attack(att[0].name, att[1].name)
-
-   	return newframework 
+    return l

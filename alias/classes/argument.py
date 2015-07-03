@@ -9,13 +9,13 @@ class Argument(object):
     # Determines whether the argument is legally in within a given labelling
     def is_legally_in(self, labelling):
         if not (labelling.af.argument_exists(self.name)):
-            raise ArgumentException("Argument does not exist in this framework.")
-        if self.name not in labelling.inargs:
+            raise ArgumentException("Argument does not exist in this framework/labelling.")
+        if labelling.labelling[self.name] is not al.Label.inlabel:
             raise al.LabellingException("Argument is not labelled in.")
 
         allout = True
         for att in labelling.af.get_attackers(self.name):
-            if att not in labelling.outargs:
+            if labelling.labelling[att] is al.Label.inlabel:
                 allout = False
                 break
         return allout
@@ -23,13 +23,13 @@ class Argument(object):
     # Determines whether the argument is legally out within a given labelling
     def is_legally_out(self, labelling):
         if not (labelling.af.argument_exists(self.name)):
-            raise ArgumentException("Argument does not exist in this framework.")
-        if self.name not in labelling.outargs:
+            raise ArgumentException("Argument does not exist in this framework/labelling.")
+        if labelling.labelling[self.name] is not al.Label.outlabel:
             raise al.LabellingException("Argument is not labelled out.")
 
         onein = False
         for att in labelling.af.get_attackers(self.name):
-            if att in labelling.inargs:
+            if labelling.labelling[att] is al.Label.inlabel:
                 onein = True
                 break
 
@@ -38,18 +38,18 @@ class Argument(object):
     # Determines whether the argument is legally undecided within a given labelling
     def is_legally_undec(self, labelling):
         if not (labelling.af.argument_exists(self.name)):
-            raise ArgumentException("Argument does not exist in this framework.")
-        if labelling[argument] is not Label.undeclabel:
-            raise LabelException("Argument is not labelled undecided")
+            raise ArgumentException("Argument does not exist in this framework/labelling.")
+        if labelling.labelling[self.name] is not al.Label.undeclabel:
+            raise al.LabellingException("Argument is not labelled undecided.")
 
         notallout = False
         notonein = True
 
         for arg in labelling.af.get_attackers(self.name):
-            if att in labelling.inargs:
+            if labelling[att] is al.Label.inlabel:
                 notonein = False
                 break
-            if att in labelling.undecargs:
+            if labelling[att] is al.Label.undeclabel:
                 notallout = True
 
         return (notallout & notonein)
@@ -65,14 +65,14 @@ class Argument(object):
 
     def is_super_illegally_in(self, labelling):
         if not (labelling.af.argument_exists(self.name)):
-            raise ArgumentException("Argument does not exist in this framework.")
-        if self.name not in labelling.inargs:
+            raise ArgumentException("Argument does not exist in this framework/labelling.")
+        if labelling.labelling[self.name] is not al.Label.inlabel:
             raise al.LabellingException("Argument is not labelled in.")
 
         sii = False
 
         for att in labelling.af.get_attackers(self.name):
-            if att in labelling.inargs:
+            if labelling.labelling[att] is al.Label.inlabel:
                 if labelling.af.framework[att].is_legally_in(labelling):
                     sii = True
                     break

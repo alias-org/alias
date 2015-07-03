@@ -66,29 +66,27 @@ class ArgumentationFramework(object):
 
     def generate_blank_labelling(self):
         l = al.Labelling(self)
-        for arg in self.get_arguments():
-            l.undefined.add(arg)
         self.labellings.append(l)
         return l
 
     def generate_all_in(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
-            l.inargs.add(arg)
+            l.labelling[arg] = al.Label.inlabel
         self.labellings.append(l)
         return l
 
     def generate_all_out(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
-            l.outargs.add(arg)
+            l.labelling[arg] = al.Label.outlabel
         self.labellings.append(l)
         return l
 
     def generate_all_undecided(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
-            l.undecargs.add(arg)
+            l.labelling[arg] = al.Label.undeclabel
         self.labellings.append(l)
         return l
 
@@ -98,4 +96,5 @@ class ArgumentationFramework(object):
         labellings.append(l)
         return l
 
-
+    def generate_grounded(self):
+        return al.generate_grounded(self)
