@@ -73,6 +73,7 @@ class ArgumentationFramework(object):
         l = al.Labelling(self)
         for arg in self.get_arguments():
             l.labelling[arg] = al.Label.inlabel
+            l.inargs.add(arg)
         self.labellings.append(l)
         return l
 

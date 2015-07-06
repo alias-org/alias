@@ -1,65 +1,49 @@
 import alias as al
+import copy
 
-def transition_step(l, a, framework):
-<<<<<<< HEAD
-=======
-    l = l.copy()
->>>>>>> d49a3134b9fa5b721c0a0db8d10a46798132f52e
-    l[a] = al.Label.outlabel
-    for arg in l.keys():
-        if l[arg] is al.Label.outlabel:
-            if al.is_illegally_out(arg, framework, l):
-                l[arg] = al.Label.undeclabel
+def generate_preferred(af):
+    potential_preferred = []
 
-def term_trans_sequence(l, framework):
-    terminate = True
-    for arg in l.keys():
-        if l[arg] is al.Label.inlabel:
-            if al.is_illegally_in(arg, framework, l):
-                terminate = False
-                break
-    return terminate
+    def transition_step(a, L):
+        L.outargs.add(a)
+        L.labelling[a] = al.Label.outlabel
+        L.inargs.remove(a)
+        for arg in L.outargs.copy():
+            if L.af.get_arg_obj(arg).is_illegally_out(L):
+                L.undecargs.add(arg)
+                L.outargs.remove(arg)
+                L.labelling[arg] = al.Label.undeclabel
 
-def preferred_labellings(framework):
-    candidatelabellings = []
+        return L
 
-    def find_labellings(labelling):
-        def si():
-            si = set()
-            for arg in labelling.keys():
-                if labelling[arg] is al.Label.inlabel:
-                    if al.is_super_illegally_in(arg, framework, labelling):
-                        si.add(arg)
-
-            return si
-
-        for l in candidatelabellings:
-            if al.in_args(labelling) < al.in_args(l):
+    def find_preferred(L):
+        for Ldash in potential_preferred:
+            if L.undecargs < Ldash.undecargs:
                 return
 
-        if term_trans_sequence(labelling, framework):
-            for l in candidatelabellings:
-                if al.in_args(l) < al.in_args(labelling):
-                    candidatelabellings.remove(l)
+        illegal = False
+        for arg in L.inargs:
+            if L.af.get_arg_obj(arg).is_illegally_in(L):
+                illegal = True
+                break
 
-            candidatelabellings.append(labelling)
+        if not illegal:
+            for Ldash in list(potential_preferred):
+                if L.inargs < Ldash.inargs:
+                    potential_preferred.remove(Ldash)
+            potential_preferred.append(L)
             return
         else:
-            si = si()
-            if si:
-                x = si.pop()
-                transition_step(labelling, x, framework)
-                find_labellings(labelling)
+            sii = set()
+            for arg in L.inargs:
+                if L.af.get_arg_obj(arg).is_super_illegally_in(L):
+                    sii.add(arg)
+            if sii:
+                find_preferred(transition_step(sii.pop(), copy.deepcopy(L)))
             else:
-                for arg in labelling.keys():
-                    if labelling[arg] is al.Label.inlabel:
-                        if al.is_illegally_in(arg, framework, labelling):
-                            transition_step(labelling, arg, framework)
-                            find_labellings(labelling)
+                for arg in L.inargs:
+                    if L.af.get_arg_obj(arg).is_illegally_in(L):
+                        find_preferred(transition_step(arg, copy.deepcopy(L)))
 
-<<<<<<< HEAD
-    
-=======
->>>>>>> d49a3134b9fa5b721c0a0db8d10a46798132f52e
-    find_labellings(al.all_in(framework))
-    return candidatelabellings
+    find_preferred(af.generate_all_in())
+    return potential_preferred
