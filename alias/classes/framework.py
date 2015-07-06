@@ -74,6 +74,7 @@ class ArgumentationFramework(object):
         for arg in self.get_arguments():
             l.labelling[arg] = al.Label.inlabel
             l.inargs.add(arg)
+            l.undefargs.remove(arg)
         self.labellings.append(l)
         return l
 
@@ -99,3 +100,15 @@ class ArgumentationFramework(object):
 
     def generate_grounded(self):
         return al.generate_grounded(self)
+
+    """
+    Set Creation Methods
+    """
+    # Returns a list of sets containing all possible combinations of arguments within the framework
+    # Adapted from example at: http://rosettacode.org/wiki/Power_set
+    def generate_powerset(self):
+        def list_powerset(lst):
+            return reduce(lambda result, x: result + [subset + [x] for subset in result],
+                  lst, [[]])
+
+        return frozenset(map(frozenset, list_powerset(list(self.get_arguments()))))
