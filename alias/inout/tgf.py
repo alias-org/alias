@@ -55,7 +55,7 @@ def read_tgf(path):
         framework.add_argument(arg)
 
     for att in parsed[1]:
-        framework.add_attack(att[0], att[1])
+        framework.add_attack((att[0], att[1]))
 
     return framework
 

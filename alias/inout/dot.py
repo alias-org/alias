@@ -81,7 +81,7 @@ def read_dot(path):
             prev = -1
             for curr in edge:
                 if prev >= 0:
-                    framework.add_attack(edge[prev], curr)
+                    framework.add_attack((edge[prev], curr))
                 prev = prev + 1
 
     return framework

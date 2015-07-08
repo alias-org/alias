@@ -63,7 +63,7 @@ def read_apx(path):
 
     if 'att' in  parsed.keys():
         for att in parsed['att']:
-            framework.add_attack(att[0], att[1])
+            framework.add_attack((att[0], att[1]))
 
     return framework
 
