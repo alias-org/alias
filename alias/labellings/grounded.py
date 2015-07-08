@@ -5,7 +5,6 @@ def generate_grounded(af):
 
     for arg in af.get_arguments():
         if not af.get_attackers(arg):
-            l.labelling[arg] = al.Label.inlabel
             l.undefargs.remove(arg)
             l.inargs.add(arg)
 
@@ -16,7 +15,6 @@ def generate_grounded(af):
         for arg in l.undefargs.copy():
             for att in af.get_attackers(arg):
                 if att in l.inargs:
-                    l.labelling[arg] = al.Label.outlabel
                     l.outargs.add(arg)
                     l.undefargs.remove(arg)
                     iterate = True
@@ -30,13 +28,11 @@ def generate_grounded(af):
                     break
 
             if allout:
-                l.labelling[arg] = al.Label.inlabel
                 l.inargs.add(arg)
                 l.undefargs.remove(arg)
                 iterate = True
 
     for arg in l.undefargs.copy():
-        l.labelling[arg] = al.Label.undeclabel
         l.undecargs.add(arg)
         l.undefargs.remove(arg)
 

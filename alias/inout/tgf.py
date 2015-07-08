@@ -1,95 +1,95 @@
 import alias as al
 
 def read_tgf(path):
-	"""Generates an alias.ArgumentationFramework from a Trivial Graph Format (.tgf) file.
+    """Generates an alias.ArgumentationFramework from a Trivial Graph Format (.tgf) file.
 
-	Trivial Graph Format (TGF) is a simple text-based file format for describing graphs. \
-	It consists of a list of node definitions, which map node IDs to labels, followed by \
-	a list of edges, which specify node pairs and an optional edge label. \
-	Node IDs can be arbitrary identifiers, whereas labels for both nodes and edges are plain strings.
+    Trivial Graph Format (TGF) is a simple text-based file format for describing graphs. \
+    It consists of a list of node definitions, which map node IDs to labels, followed by \
+    a list of edges, which specify node pairs and an optional edge label. \
+    Node IDs can be arbitrary identifiers, whereas labels for both nodes and edges are plain strings.
 
-	Parameters
-	----------
-	path : file or string
-		File, directory or filename to be read.
+    Parameters
+    ----------
+    path : file or string
+        File, directory or filename to be read.
 
-	Returns
-	-------
-	framework : alias ArgumentationFramework
+    Returns
+    -------
+    framework : alias ArgumentationFramework
 
-	Examples
-	--------
+    Examples
+    --------
 
-	References
-	----------
-	http://en.wikipedia.org/wiki/Trivial_Graph_Format 
-	"""
+    References
+    ----------
+    http://en.wikipedia.org/wiki/Trivial_Graph_Format 
+    """
 
-	try:
-		from pyparsing import Word, alphanums, ZeroOrMore, White, Suppress, Group, ParseException, Optional
-	except ImportError:
-		raise ImportError("read_tgf requires pyparsing")
+    try:
+        from pyparsing import Word, alphanums, ZeroOrMore, White, Suppress, Group, ParseException, Optional
+    except ImportError:
+        raise ImportError("read_tgf requires pyparsing")
 
-	if not isinstance(path, str):
-		return
+    if not isinstance(path, str):
+        return
 
-	# Define tgf grammar
-	s = White(" ")
-	tag = Word(alphanums)
-	arg = Word(alphanums)
-	att = Group(arg + Suppress(s) + arg + Optional(Suppress(s) + tag))
-	nl = Suppress(White("\n"))
+    # Define tgf grammar
+    s = White(" ")
+    tag = Word(alphanums)
+    arg = Word(alphanums)
+    att = Group(arg + Suppress(s) + arg + Optional(Suppress(s) + tag))
+    nl = Suppress(White("\n"))
 
-	graph = Group(ZeroOrMore(arg + nl)) + Suppress("#") + nl + Group(ZeroOrMore(att + nl) + ZeroOrMore(att))
-	
-	framework = al.ArgumentationFramework()
-	f = open(path, 'r')
-	f = f.read()
+    graph = Group(ZeroOrMore(arg + nl)) + Suppress("#") + nl + Group(ZeroOrMore(att + nl) + ZeroOrMore(att))
+    
+    framework = al.ArgumentationFramework()
+    f = open(path, 'r')
+    f = f.read()
 
-	try:
-		parsed = graph.parseString(f)
-	except ParseException:
-		raise ParseException()
+    try:
+        parsed = graph.parseString(f)
+    except ParseException:
+        raise ParseException('Parsing error')
 
-	for arg in parsed[0]:
-		framework.add_argument(arg)
+    for arg in parsed[0]:
+        framework.add_argument(arg)
 
-	for att in parsed[1]:
-		framework.add_attack(att[0], att[1])
+    for att in parsed[1]:
+        framework.add_attack(att[0], att[1])
 
-	return framework
+    return framework
 
-def tgf_out(framework, outloc):
-	"""Outputs a Trivial Graph Format (.tgf) file from an alias.ArgumentationFramework.
+def write_tgf(framework, outloc):
+    """Outputs a Trivial Graph Format (.tgf) file from an alias.ArgumentationFramework.
 
-	Trivial Graph Format (TGF) is a simple text-based file format for describing graphs. \
-	It consists of a list of node definitions, which map node IDs to labels, followed by \
-	a list of edges, which specify node pairs and an optional edge label. \
-	Node IDs can be arbitrary identifiers, whereas labels for both nodes and edges are plain strings.
+    Trivial Graph Format (TGF) is a simple text-based file format for describing graphs. \
+    It consists of a list of node definitions, which map node IDs to labels, followed by \
+    a list of edges, which specify node pairs and an optional edge label. \
+    Node IDs can be arbitrary identifiers, whereas labels for both nodes and edges are plain strings.
 
-	Parameters
-	----------
-	framework :
-		alias ArgumentationFramework
-	outloc : string
-		Directory location for file to be written to.
+    Parameters
+    ----------
+    framework :
+        alias ArgumentationFramework
+    outloc : string
+        Directory location for file to be written to.
 
-	Returns
-	-------
-	framework : alias ArgumentationFramework
+    Returns
+    -------
+    
 
-	Examples
-	--------
+    Examples
+    --------
 
-	References
-	----------
-	http://en.wikipedia.org/wiki/Trivial_Graph_Format 
-	"""
-	f = open(outloc, 'w')
+    References
+    ----------
+    http://en.wikipedia.org/wiki/Trivial_Graph_Format 
+    """
+    f = open(outloc, 'w')
 
-	for arg in framework.get_arguments():
-		f.write(arg + "\n")
-	f.write("#")
-	for att in framework.get_attacks():
-		f.write(att[0] + " " + att[1] + "\n")
-	f.close()
+    for arg in framework.get_arguments():
+        f.write(arg + "\n")
+    f.write("#\n")
+    for att in framework.get_attacks():
+        f.write(att[0] + " " + att[1] + "\n")
+    f.close()

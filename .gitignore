@@ -1,4 +1,4 @@
 *.pyc
 .DS_Store
+.coverage
 testing.py
-109649__200__11_12_65__35.tgf

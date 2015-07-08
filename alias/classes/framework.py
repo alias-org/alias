@@ -21,20 +21,39 @@ class ArgumentationFramework(object):
         return self.__generate_attacks()
 
     # Add an argument to the AF, takes the argument's name as input.  If the argument already exists, break
-    def add_argument(self, argumentname):
-        if self.__contains__(argumentname):
-            return
+    def add_argument(self, args):
+        def add(argumentname):
+            if not isinstance(argumentname, basestring):
+                raise FrameworkException('Only string based argument name references can be added to a framework')
+            else:
+                if self.__contains__(argumentname):
+                    return
+                else:
+                    newarg = al.Argument(argumentname)
+                    self.framework[argumentname] = newarg
+                    for l in self.labellings:
+                        l.undefined.add(argumentname)
+
+        if isinstance(args, basestring):
+            add(args)
         else:
-            newarg = al.Argument(argumentname)
-            self.framework[argumentname] = newarg
-            for l in self.labellings:
-                l.undefined.add(argumentname)
+            for arg in args:
+                add(arg)
+
 
     # Adds an attack to the AF, if the attacker or target do not exist, add them to the AF
-    def add_attack(self, attacker, target):
-        self.add_argument(attacker)
-        self.add_argument(target)
-        self.framework[attacker].attacks.add(target)
+    def add_attack(self, att = (None, None), atts = None):
+        if att[0]:
+            if att[1]:
+                self.add_argument(att[0])
+                self.add_argument(att[1])
+                self.framework[att[0]].attacks.add(att[1])
+        
+        if atts:
+            for a in atts:
+                self.add_argument(a[0])
+                self.add_argument(a[1])
+                self.framework[a[0]].attacks.add(a[1])
 
     # Returns a list of all the arguments that a given argument attacks
     def get_attacking(self, argument):
@@ -72,7 +91,6 @@ class ArgumentationFramework(object):
     def generate_all_in(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
-            l.labelling[arg] = al.Label.inlabel
             l.inargs.add(arg)
             l.undefargs.remove(arg)
         self.labellings.append(l)
@@ -81,14 +99,16 @@ class ArgumentationFramework(object):
     def generate_all_out(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
-            l.labelling[arg] = al.Label.outlabel
+            l.outargs.add(arg)
+            l.undefargs.remove(arg)
         self.labellings.append(l)
         return l
 
     def generate_all_undecided(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
-            l.labelling[arg] = al.Label.undeclabel
+            l.undecargs.add(arg)
+            l.undefargs.remove(arg)
         self.labellings.append(l)
         return l
 
@@ -112,3 +132,6 @@ class ArgumentationFramework(object):
                   lst, [[]])
 
         return frozenset(map(frozenset, list_powerset(list(self.get_arguments()))))
+
+class FrameworkException(Exception):
+    pass
