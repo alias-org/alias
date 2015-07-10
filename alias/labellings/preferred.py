@@ -15,7 +15,7 @@ def generate_preferred(af):
 
     def find_preferred(L):
         for Ldash in potential_preferred:
-            if L.undecargs < Ldash.undecargs:
+            if L.undecargs <= Ldash.undecargs:
                 return
 
         illegal = False
@@ -25,7 +25,7 @@ def generate_preferred(af):
                 break
 
         if not illegal:
-            for Ldash in list(potential_preferred):
+            for Ldash in potential_preferred:
                 if L.inargs < Ldash.inargs:
                     potential_preferred.remove(Ldash)
             potential_preferred.append(L)

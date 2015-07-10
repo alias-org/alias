@@ -18,6 +18,9 @@ class Argument(object):
             if att in labelling.inargs:
                 allout = False
                 break
+            if att in labelling.undecargs:
+                allout = False
+                break
         return allout
 
     # Determines whether the argument is legally out within a given labelling
@@ -72,7 +75,7 @@ class Argument(object):
         sii = False
 
         for att in labelling.af.get_attackers(self.name):
-            if att in labelling.inlabel is al.Label.inlabel:
+            if att in labelling.inargs:
                 if labelling.af.framework[att].is_legally_in(labelling):
                     sii = True
                     break

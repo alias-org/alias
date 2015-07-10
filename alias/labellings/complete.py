@@ -20,9 +20,8 @@ def generate_complete(af):
                 illegal = True
                 break
         if not illegal:
-            if L.is_complete():
-                potential_completes.append(L)
-                return
+            potential_completes.append(L)
+            return
         else:
             sii = set()
             for arg in L.inargs:

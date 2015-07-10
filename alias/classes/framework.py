@@ -20,6 +20,9 @@ class ArgumentationFramework(object):
     def get_attacks(self):
         return self.__generate_attacks()
 
+    def arg_in(self, arg):
+        return a in self.framework
+
     # Add an argument to the AF, takes the argument's name as input.  If the argument already exists, break
     def add_argument(self, args):
         def add(argumentname):
@@ -72,6 +75,12 @@ class ArgumentationFramework(object):
     def argument_exists(self, argument):
         return argument in self.framework
 
+    def num_arguments(self):
+        return len(self.framework)
+
+    def num_attacks(self):
+        return len(self.get_attacks())
+
     def __generate_attacks(self):
         attacks = []
         for arg in self.get_arguments():
@@ -104,18 +113,12 @@ class ArgumentationFramework(object):
         self.labellings.append(l)
         return l
 
-    def generate_all_undecided(self):
+    def generate_all_undec(self):
         l = al.Labelling(self)
         for arg in self.get_arguments():
             l.undecargs.add(arg)
             l.undefargs.remove(arg)
         self.labellings.append(l)
-        return l
-
-    def generate_power_labelling(self):
-        labellings = []
-        l = self.generate_all_in()
-        labellings.append(l)
         return l
 
     def generate_grounded(self):

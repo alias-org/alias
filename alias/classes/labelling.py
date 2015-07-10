@@ -11,6 +11,66 @@ class Labelling(object):
         for arg in af.get_arguments():
         	self.undefargs.add(arg)
 
+    def label_in(self, arg):
+        if arg in self.inargs:
+            return
+        elif arg in self.outargs:
+            self.outargs.remove(arg)
+            self.inargs.add(arg)
+        elif arg in self.undecargs:
+            self.undecargs.remove(arg)
+            self.inargs.add(arg)
+        elif arg in self.undefargs:
+            self.undefargs.remove(arg)
+            self.inargs.add(arg)
+        else:
+            raise LabellingException('Argument not present in labelling')
+
+    def label_out(self, arg):
+        if arg in self.inargs:
+            self.inargs.remove(arg)
+            self.outargs.add(arg)
+        elif arg in self.outargs:
+            return
+        elif arg in self.undecargs:
+            self.undecargs.remove(arg)
+            self.outargs.add(arg)
+        elif arg in self.undefargs:
+            self.undefargs.remove(arg)
+            self.outargs.add(arg)
+        else:
+            raise LabellingException('Argument not present in labelling')
+
+    def label_undec(self, arg):
+        if arg in self.inargs:
+            self.inargs.remove(arg)
+            self.undecargs.add(arg)
+        elif arg in self.outargs:
+            self.outargs.remove(arg)
+            self.undecargs.add(arg)
+        elif arg in self.undecargs:
+            return
+        elif arg in self.undefargs:
+            self.undefargs.remove(arg)
+            self.undecargs.add(arg)
+        else:
+            raise LabellingException('Argument not present in labelling')
+
+    def label_undefined(self,arg):
+        if arg in self.inargs:
+            self.inargs.remove(arg)
+            self.undefargs.add(arg)
+        elif arg in self.outargs:
+            self.outargs.remove(arg)
+            self.undefargs.add(arg)
+        elif arg in self.undecargs:
+            self.undecargs.remove(arg)
+            self.undefargs.add(arg)
+        elif arg in self.undefargs:
+            return
+        else:
+            raise LabellingException('Argument not present in labelling')
+
     def is_complete(self):
         complete = True
         if self.undefargs:
