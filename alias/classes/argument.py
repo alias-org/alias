@@ -45,17 +45,17 @@ class Argument(object):
         if self.name not in labelling.undecargs:
             raise al.LabellingException("Argument is not labelled undecided.")
 
-        notallout = False
-        notonein = True
+        allout = True
+        onein = False
 
         for att in labelling.af.get_attackers(self.name):
+            if att not in labelling.outargs:
+                allout = False
             if att in labelling.inargs:
-                notonein = False
+                onein = True
                 break
-            if att in labelling.undecargs:
-                notallout = True
 
-        return (notallout & notonein)
+        return not (allout | onein)
 
     def is_illegally_in(self, labelling):
         return not self.is_legally_in(labelling)
@@ -73,12 +73,16 @@ class Argument(object):
             raise al.LabellingException("Argument is not labelled in.")
 
         sii = False
-
-        for att in labelling.af.get_attackers(self.name):
-            if att in labelling.inargs:
-                if labelling.af.framework[att].is_legally_in(labelling):
-                    sii = True
-                    break
+        if self.is_illegally_in(labelling):
+            for att in labelling.af.get_attackers(self.name):
+                if att in labelling.inargs:
+                    if labelling.af.get_arg_obj(att).is_legally_in(labelling):
+                        sii = True
+                        break
+                if att in labelling.undecargs:
+                    if labelling.af.framework[att].is_legally_undec(labelling):
+                        sii = True
+                        break
 
         return sii 
 

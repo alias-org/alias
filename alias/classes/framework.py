@@ -70,7 +70,7 @@ class ArgumentationFramework(object):
         for att in self.get_attacks():
             if att[1] == argument:
                 attackers.append(att[0])
-        return attackers
+        return set(attackers)
 
     def argument_exists(self, argument):
         return argument in self.framework
@@ -135,6 +135,107 @@ class ArgumentationFramework(object):
                   lst, [[]])
 
         return frozenset(map(frozenset, list_powerset(list(self.get_arguments()))))
+
+    def argsP(self, sargs):
+        attacked = set()
+        for arg in sargs:
+            attacked.update(self.get_attacking(arg))
+        return attacked
+
+    def argsM(self, sargs):
+        attackers = set()
+        for arg in sargs:
+            attackers.update(self.get_attackers(arg))
+        return attackers
+
+    def argsD(self, sargs):
+        defended = set()
+        for arg in self.get_arguments():
+            attackers = self.get_attackers(arg)
+            defen = True
+            for att in attackers:
+                if att not in self.argsP(sargs):
+                    defen = False
+                    break
+            if defen:
+                defended.add(arg)
+        return defended
+
+    def argsU(self,sargs):
+        return (set(self.get_arguments()) - self.argsP(sargs))
+
+    """
+    Set Semantic Methods
+    """
+
+    def set_attacks(self, sargs, arg):
+        return arg in self.argsP(sargs)
+
+    # Given a set of arguments within the framework - determines whether that set of arguments is conflict-free
+    def is_conflict_free(self, sargs):
+        if self.argsP(sargs).intersection(sargs):
+            return False
+        return True
+
+    def is_admissible(self, sargs):
+        if self.is_conflict_free(sargs):
+            if self.argsM(sargs):
+                if self.argsP(sargs) >= self.argsM(sargs):
+                    return True
+                else:
+                    return False
+            else:
+                return True
+        return False
+
+    def is_complete(self, sargs):
+        if self.is_admissible(sargs):
+            allin = True
+            for arg in self.argsD(sargs):
+                if arg not in sargs:
+                    allin = False
+                    break
+            return allin
+        else:
+            return False
+
+    def is_preferred(self, sargs):
+        pass
+
+    """
+    Extension Methods
+    """
+
+    def extension_grounded(self):
+        
+
+    def extension_complete(self):
+        comp = []
+        for s in self.generate_powerset():
+            if self.is_complete(s):
+                comp.append(s)
+        return comp
+
+    def extension_preferred(self):
+        comp = self.generate_complete()
+        pref = []
+        for c in comp:
+            subset = False
+            for d in comp:
+                if c < d:
+                    subset = True
+            if not subset:
+                pref.append(c)
+
+        return pref
+
+    def extension_stable(self):
+        pref = self.generate_preferred()
+        stab = []
+        for p in pref:
+            if p == self.argsU(p):
+                stab.append(p)
+        return stab
 
 class FrameworkException(Exception):
     pass

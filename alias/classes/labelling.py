@@ -1,4 +1,5 @@
 import alias as al
+from copy import deepcopy
 
 class Labelling(object):
 
@@ -71,6 +72,17 @@ class Labelling(object):
         else:
             raise LabellingException('Argument not present in labelling')
 
+    def lab2ext(self):
+        return self.inargs
+
+    def transition_step(self, x):
+        l = deepcopy(self)
+        l.label_out(x)
+        for arg in self.outargs:
+            if l.af.get_arg_obj(arg).is_illegally_out(l):
+                l.label_undec(arg)
+        return l
+
     def is_complete(self):
         complete = True
         if self.undefargs:
@@ -88,7 +100,6 @@ class Labelling(object):
                 if self.af.get_arg_obj(arg).is_illegally_undec(self):
                     complete = False
                     break
-
         return complete
 
 

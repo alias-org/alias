@@ -1,6 +1,6 @@
 import alias as al
 
-def generate_grounded(af):
+def labelling_grounded(af):
     l = af.generate_blank_labelling()
 
     for arg in af.get_arguments():

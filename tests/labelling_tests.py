@@ -30,18 +30,18 @@ class LabellingCreationTests(TestCase):
         l = af.generate_all_undec()
         assert set(['a','b','c','d']).issubset(l.undecargs)
 
-class LabellingExtensionTests(TestCase):
+class LabellingSemanticTests(TestCase):
 
     def test_complete_labelling(self):
-
+        pass
 
     def test_grounded_labelling(self):
-
+        pass
 
     def test_preferred_labelling(self):
-
+        pass
 
     def test_stable_labelling(self):
-
+        pass
         
 
