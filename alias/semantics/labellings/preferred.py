@@ -15,7 +15,7 @@ def labelling_preferred(af):
                 break
         if not illegal:
             for Ldash in potential_preferred:
-                if L.inargs < Ldash.inargs:
+                if Ldash.inargs < L.inargs:
                     potential_preferred.remove(Ldash)
             potential_preferred.append(L)
             return

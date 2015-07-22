@@ -1,13 +1,42 @@
 import alias as al
+import sys
 
 class ArgumentationFramework(object):
 
-    def __init__(self):
+    def __init__(self, name=''):
         self.framework = {}
         self.labellings = []
+        self.name = name
 
     def __contains__(self, arg):
         return arg in self.framework
+
+    def __str__(self):
+        string = '{ '
+        argcount = 0
+        for arg in self.get_arguments():
+            argcount = argcount + 1
+            string = string + ('\'' + arg + '\'' + ' : [')
+            attcount = 0
+            for att in self.framework[arg].attacks:
+                if attcount < (len(self.framework[arg].attacks) - 1):
+                    string = string + ('\'' + att + '\'' + ', ')
+                    attcount = attcount + 1
+                else:
+                    string = string + ('\'' + att + '\'')
+            if argcount < (len(self.get_arguments()) -1):
+                string = string + ('], ')
+            else:
+                string = string + ('] ')
+        string = string + ('}')
+        return string
+
+    def __iter__(self):
+        for arg in self.framework:
+            yield self.framework[arg]
+
+    def __getitem__(self, arg):
+        return self.framework[arg]
 
     # Return a list of all arguments in the AF
     def get_arguments(self):
@@ -32,7 +61,7 @@ class ArgumentationFramework(object):
                 if self.__contains__(argumentname):
                     return
                 else:
-                    newarg = al.Argument(argumentname)
+                    newarg = al.Argument(argumentname, self)
                     self.framework[argumentname] = newarg
                     for l in self.labellings:
                         l.undefined.add(argumentname)
@@ -200,6 +229,9 @@ class ArgumentationFramework(object):
             return False
 
     def is_preferred(self, sargs):
+        """
+        TODO
+        """
         pass
 
     """
@@ -207,6 +239,10 @@ class ArgumentationFramework(object):
     """
 
     def extension_grounded(self):
+        """
+        TODO
+        """
+        pass
         
 
     def extension_complete(self):
@@ -217,7 +253,7 @@ class ArgumentationFramework(object):
         return comp
 
     def extension_preferred(self):
-        comp = self.generate_complete()
+        comp = self.extension_complete()
         pref = []
         for c in comp:
             subset = False
@@ -230,12 +266,9 @@ class ArgumentationFramework(object):
         return pref
 
     def extension_stable(self):
-        pref = self.generate_preferred()
+        pref = self.extension_preferred()
         stab = []
         for p in pref:
             if p == self.argsU(p):
                 stab.append(p)
         return stab
-
-class FrameworkException(Exception):
-    pass

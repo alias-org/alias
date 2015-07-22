@@ -1,7 +1,7 @@
 import alias as al
 import copy
 
-def generate_stables(af):
+def labelling_stable(af):
     potential_stables = []
 
     def find_stables(L):

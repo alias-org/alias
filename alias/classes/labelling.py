@@ -3,8 +3,9 @@ from copy import deepcopy
 
 class Labelling(object):
 
-    def __init__(self, af):
+    def __init__(self, af, name=''):
         self.af = af
+        self.name = name
         self.inargs = set()
         self.outargs = set()
         self.undecargs = set()
@@ -101,7 +102,3 @@ class Labelling(object):
                     complete = False
                     break
         return complete
-
-
-class LabellingException(Exception):
-    pass

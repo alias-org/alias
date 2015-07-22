@@ -1,4 +1,5 @@
 import alias as al
+import ntpath
 
 def read_tgf(path):
     """Generates an alias.ArgumentationFramework from a Trivial Graph Format (.tgf) file.
@@ -42,14 +43,17 @@ def read_tgf(path):
 
     graph = Group(ZeroOrMore(arg + nl)) + Suppress("#") + nl + Group(ZeroOrMore(att + nl) + ZeroOrMore(att))
     
-    framework = al.ArgumentationFramework()
+    
     f = open(path, 'r')
     f = f.read()
 
+    head, tail = ntpath.split(path)
+    framework = al.ArgumentationFramework(tail)
+
     try:
         parsed = graph.parseString(f)
-    except ParseException:
-        raise ParseException('Parsing error')
+    except ParseException, e:
+        raise al.ParsingException(e)
 
     for arg in parsed[0]:
         framework.add_argument(arg)

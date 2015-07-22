@@ -1,4 +1,4 @@
- digraph graphname {
+ digraph {
      a -> b -> c;
      b -> d;
  }

@@ -1,5 +1,5 @@
 import alias as al
-from pyparsing import *
+import ntpath
 
 def read_dot(path):
     """Generates an alias.ArgumentationFramework from a DOT graph
@@ -24,7 +24,7 @@ def read_dot(path):
 
     try:
         from pyparsing import Word, Literal, alphas, alphanums, nums, OneOrMore
-        from pyparsing import Forward, Optional, Keyword, Group, Suppress 
+        from pyparsing import Forward, Optional, Keyword, Group, Suppress, ParseException 
     except ImportError:
         raise ImportError("read_dot requires pyparsing")
 
@@ -64,13 +64,24 @@ def read_dot(path):
     stmt = (edge_stmt | node_stmt | attr_stmt | (ID + EQ + ID) | subg)
     stmt_list << OneOrMore(stmt + Optional(SCOL))
 
-    dot = OneOrMore(Optional(strict) + (graph | digraph) + Optional(ID) + LBR + stmt_list + RBR)
-
-    framework = al.ArgumentationFramework()
+    dot = OneOrMore(Optional(strict) + (digraph | graph)("gtype") + Optional(ID)("gname") + LBR + stmt_list + RBR)
 
     f = open(path, 'r')
     f = f.read()
-    parsed = dot.parseString(f)
+
+    try:
+        parsed = dot.parseString(f)
+    except ParseException, e:
+        raise al.ParsingException(e)
+
+    if parsed['gtype'] == 'graph':
+        raise al.ParsingException('Graph must be a directed graph (digraph).')
+
+    if 'gname' in parsed.keys():
+        framework = al.ArgumentationFramework(parsed['gname'])
+    else:
+        head, tail = ntpath.split(path)
+        framework = al.ArgumentationFramework(tail)
 
     if 'arg' in parsed.keys():
         for arg in parsed['arg']:

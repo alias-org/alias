@@ -1,4 +1,5 @@
 import alias as al
+import ntpath
 
 def read_apx(path):
     """Generates an alias.ArgumentationFramework from an Aspartix (.apx) file.
@@ -48,14 +49,17 @@ def read_apx(path):
 
     apx = OneOrMore((arg_cmd | attack_cmd | pref_cmd | val_cmd | valpref_cmd | support_cmd) + DOT)
     
-    framework = al.ArgumentationFramework()
+    
     f = open(path, 'r')
     f = f.read()
 
+    head, tail = ntpath.split(path)
+    framework = al.ArgumentationFramework(tail)
+    
     try:
         parsed = apx.parseString(f)
-    except ParseException:
-        raise ParseException()
+    except ParseException, e:
+        raise al.ParsingException(e)
 
     if 'arg' in parsed.keys():
         for arg in parsed['arg']:

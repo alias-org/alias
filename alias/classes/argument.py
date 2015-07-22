@@ -2,9 +2,32 @@ import alias as al
 
 class Argument(object):
     
-    def __init__(self, name):
+    def __init__(self, name, framework):
         self.name = name
+        self.framework = framework
         self.attacks = set()
+
+    def __str__(self):
+        string = '\'' + self.name + '\' : ['
+        attcount = 0
+        for att in self.attacks:
+            attcount = attcount + 1
+            if attcount < (len(self.attacks) -1):
+                string = string + '\'%s\', ' %att
+            else:
+                string = string + '\'%s\'' %att 
+        string = string + ']'
+        return string
+
+    def __iter__(self):
+        for arg in self.attacks:
+            yield arg
+
+    def __getitem__(self,arg):
+        if arg in self.attacks:
+            return self.framework[arg]
+        else:
+            raise al.FrameworkException('Argument \'%s\' is not attacked by argument \'%s\'' %(arg, self.name))
 
     # Determines whether the argument is legally in within a given labelling
     def is_legally_in(self, labelling):
@@ -85,7 +108,3 @@ class Argument(object):
                         break
 
         return sii 
-
-class ArgumentException(Exception):
-    pass
-
