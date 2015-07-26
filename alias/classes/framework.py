@@ -4,15 +4,18 @@ import sys
 class ArgumentationFramework(object):
 
     def __init__(self, name=''):
+        self.name = name
         self.framework = {}
         self.labellings = []
-        self.name = name
 
     def __contains__(self, arg):
         return arg in self.framework
 
     def __str__(self):
-        string = '{ '
+        if self.name != '':
+            string = 'ArgumentationFramework \'%s\' : {' %self.name
+        else:
+            string = '{ '
         argcount = 0
         for arg in self.get_arguments():
             argcount = argcount + 1
@@ -24,16 +27,18 @@ class ArgumentationFramework(object):
                     attcount = attcount + 1
                 else:
                     string = string + ('\'' + att + '\'')
-            if argcount < (len(self.get_arguments()) -1):
+            if argcount < (len(self.get_arguments())):
                 string = string + ('], ')
             else:
-                string = string + ('] ')
+                string = string + (']')
         string = string + ('}')
         return string
 
+    def __len__(self):
+        return len(self.framework)
+
     def __iter__(self):
-        for arg in self.framework:
-            yield self.framework[arg]
+        return iter(self.framework)
 
     def __getitem__(self, arg):
         return self.framework[arg]
@@ -86,6 +91,42 @@ class ArgumentationFramework(object):
                 self.add_argument(a[0])
                 self.add_argument(a[1])
                 self.framework[a[0]].attacks.add(a[1])
+
+    def remove_argument(self, args):
+        def remove(argumentname):
+            if not isinstance(argumentname, basestring):
+                raise FrameworkException('Only string based argument name references can be removed from a framework')
+            else:
+                if not self.__contains__(argumentname):
+                    return
+                else:
+                    del self.framework[argumentname]
+
+        if isinstance(args, basestring):
+            remove(args)
+        else:
+            for arg in args:
+                add(arg)
+
+    def remove_attack(self, att = (None, None), atts = None):
+        """
+        TODO
+        """
+
+        if att[0]:
+            if att[1]:
+                pass
+        
+        if atts:
+            for a in atts:
+                self.add_argument(a[0])
+                self.add_argument(a[1])
+                self.framework[a[0]].attacks.add(a[1])
+
+    def clear(self):
+        self.name = ''
+        self.framework.clear()
+        self.labellings.clear()
 
     # Returns a list of all the arguments that a given argument attacks
     def get_attacking(self, argument):
@@ -196,10 +237,6 @@ class ArgumentationFramework(object):
     """
     Set Semantic Methods
     """
-
-    def set_attacks(self, sargs, arg):
-        return arg in self.argsP(sargs)
-
     # Given a set of arguments within the framework - determines whether that set of arguments is conflict-free
     def is_conflict_free(self, sargs):
         if self.argsP(sargs).intersection(sargs):

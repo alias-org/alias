@@ -1,6 +1,10 @@
 import alias as al
 
 def draw_framework(af, labelling=None):
+    """
+    Utilises NetworkXs draw fucntionality to produce a matplotlib of the framework
+    """
+
     try:
         import networkx as nx
     except ImportError:

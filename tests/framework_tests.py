@@ -90,4 +90,40 @@ class FrameworkTests(TestCase):
         af.add_argument(['a','b','c'])
         assert set([frozenset(['a', 'c', 'b']), frozenset(['b']), frozenset(['a']), frozenset([]), frozenset(['c', 'b']), frozenset(['a', 'c']), frozenset(['c']), frozenset(['a', 'b'])]).issubset(af.generate_powerset())
 
+    def test_arg_set_attacking(self):
+        pass
+
+    def test_arg_set_attackers(self):
+        pass
+
+    def test_arg_set_unattacked(self):
+        pass
+
+    def test_arg_set_defending(self):
+        pass
+
+    def test_check_conflict_free(self):
+        pass
+
+    def test_check_admissible(self):
+        pass
+
+    def test_check_complete(self):
+        pass
+
+    def test_check_preferred(self):
+        pass
+
+    def test_extension_grounded(self):
+        pass
+
+    def test_extension_complete(self):
+        pass
+
+    def test_extension_preferred(self):
+        pass
+
+    def test_extension_stable(self):
+        pass
+
     

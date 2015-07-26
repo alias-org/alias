@@ -4,7 +4,7 @@ def n4j_connect(dbaddress=None, port=None, u='', p=''):
     try:
         from py2neo import Graph
     except ImportError:
-        raise ImportError("py2neo is required for db_connect()")
+        raise ImportError("py2neo is required for n4j_connect()")
 
     if dbaddress:
         if port:
@@ -19,7 +19,7 @@ def n4j_connect(dbaddress=None, port=None, u='', p=''):
 
     return graph_db
 
-def framework_to_neo4j(af, dbaddress=None, port=None, u='', p=''):
+def to_neo4j(af, dbaddress=None, port=None, u='', p=''):
     try:
         from py2neo import Graph
     except ImportError:
@@ -45,7 +45,7 @@ def framework_to_neo4j(af, dbaddress=None, port=None, u='', p=''):
     add_atts(af.get_attacks())
     tx.commit()
 
-def framework_from_neo4j(framework, dbaddress=None, port=None, u='', p=''):
+def from_neo4j(framework, dbaddress=None, port=None, u='', p=''):
     try:
         from py2neo import Graph
     except ImportError:
@@ -63,10 +63,7 @@ def framework_from_neo4j(framework, dbaddress=None, port=None, u='', p=''):
         nodes.append(r[0])
         af.add_argument(r[0])
 
-    print nodes
-
     for r in graph_db.cypher.stream(attstmt):
-        print r[0], r[1]
         af.add_attack((r[0],r[1]))
 
     return af

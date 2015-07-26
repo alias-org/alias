@@ -3,15 +3,69 @@ from copy import deepcopy
 
 class Labelling(object):
 
-    def __init__(self, af, name=''):
-        self.af = af
+    def __init__(self, framework, name=''):
+        self.framework = framework
         self.name = name
         self.inargs = set()
         self.outargs = set()
         self.undecargs = set()
         self.undefargs = set()
-        for arg in af.get_arguments():
+
+        for arg in self.framework.get_arguments():
         	self.undefargs.add(arg)
+
+    def __str__(self):
+        string = 'Labelling \'%s\' : {in : [' %self.name
+
+        if self.inargs:
+            argcount = 0
+            for arg in self.inargs:
+                if argcount < (len(self.inargs) - 1):
+                    string = string + '\'%s\', ' %arg
+                else:
+                    string = string + '\'%s\']' %arg
+                argcount = argcount + 1
+        else:
+            string = string + ']'
+
+        string = string + ' out : ['
+        if self.outargs:
+            argcount = 0
+            for arg in self.outargs:
+                if argcount < (len(self.outargs) - 1):
+                    string = string + '\'%s\', ' %arg
+                else:
+                    string = string + '\'%s\']' %arg
+                argcount = argcount + 1
+        else:
+            string = string + ']'
+
+        string = string + ' undecided : ['
+        if self.undecargs:
+            argcount = 0
+            for arg in self.undecargs:
+                if argcount < (len(self.undecargs) - 1):
+                    string = string + '\'%s\', ' %arg
+                else:
+                    string = string + '\'%s\']' %arg
+                argcount = argcount + 1
+        else:
+            string = string + ']'
+
+        string = string + ' undefined : ['
+        if self.undefargs:
+            argcount = 0
+            for arg in self.undefargs:
+                if argcount < (len(self.undefargs) - 1):
+                    string = string + '\'%s\', ' %arg
+                else:
+                    string = string + '\'%s\']' %arg
+                argcount = argcount + 1
+        else:
+            string = string + ']'
+
+        string = string + '}'
+        return string
 
     def label_in(self, arg):
         if arg in self.inargs:

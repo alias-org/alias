@@ -1,30 +1,37 @@
 import alias as al
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, mapper, sessionmaker
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import create_engine
 
-def mysql_connect(dbaddress=None, u='', p='', db=None):
-    try:
-        import mysql.connector
-        from mysql.connector import Error
-    except ImportError:
-        raise ImportError("mysql.connector required for mysql_connect()")
+Base = declarative_base()
 
-    try:
-        if dbaddress:
-            if db:
-                conn = mysql.connector.connect(host=str(dbaddress), database=db, user=u, password=p)
-            else:
-                conn = mysql.connector.connect(host=str(dbaddress), database='mysql', user=u, password=p)
-        else:
-            if db:
-                conn = mysql.connector.connect(host='localhost', database=db, user=u, password=p)
-            else:
-                conn = mysql.connector.connect(host='localhost', database='mysql', user=u, password=p)
-    except Error as e:
-        print e
+class Argument(Base):
+    __tablename__ = 'argument' 
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    framework_id = Column(Integer, ForeignKey('framework.id'))
 
-    return conn
+class Attack(Base):
+    __tablename__ = 'attack'
+    attacker_id = Column(Integer, ForeignKey('argument.id'), primary_key=True)
+    target_id = Column(Integer, ForeignKey('argument.id'), primary_key=True)
+    attacker = relationship("Argument", primaryjoin=attacker_id==Argument.id)
+    target = relationship("Argument", primaryjoin=target_id==Argument.id)
 
-def to_mysql(af, dbaddress=None, u='', p='', db=None):
-    conn = mysql_connect(dbaddress=dbaddress, u=u, p=p, db=db)
+class Framework(Base):
+    __tablename__ = 'framework'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    args = relationship("Argument", backref="framework")
+    labs = relationship("Labelling", backref="framework")
 
-def from_mysql():
-    pass
+class Labelling(Base):
+    __tablename__ = 'labelling'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    framework_id = Column(Integer, ForeignKey('framework.id'))
+
+def msql_create():
+    engine = create_engine('sqlite:///sqlalchemy_example.db')
+    Base.metadata.create_all(engine)
