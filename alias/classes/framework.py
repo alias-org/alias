@@ -1,5 +1,6 @@
 import alias as al
 import sys
+from itertools import product
 
 class ArgumentationFramework(object):
 
@@ -84,13 +85,13 @@ class ArgumentationFramework(object):
             if att[1]:
                 self.add_argument(att[0])
                 self.add_argument(att[1])
-                self.framework[att[0]].attacks.add(att[1])
+                self.framework[att[0]].attacks.add(self.framework[att[1]])
         
         if atts:
             for a in atts:
                 self.add_argument(a[0])
                 self.add_argument(a[1])
-                self.framework[a[0]].attacks.add(a[1])
+                self.framework[a[0]].attacks.add(self.framework[a[1]])
 
     def remove_argument(self, args):
         def remove(argumentname):
@@ -131,7 +132,10 @@ class ArgumentationFramework(object):
     # Returns a list of all the arguments that a given argument attacks
     def get_attacking(self, argument):
         assert self.__contains__(argument)
-        return self.framework[argument].attacks
+        attacks = set()
+        for att in self.framework[argument].attacks:
+            attacks.add(att.name)
+        return attacks
 
     # Returns a list of all of the attackers of a given argument in the framework
     def get_attackers(self, argument):
@@ -155,12 +159,29 @@ class ArgumentationFramework(object):
         attacks = []
         for arg in self.get_arguments():
             for target in self.framework[arg].attacks:
-                attacks.append((arg, target))
+                attacks.append((arg, target.name))
         return attacks
 
     """
     Labelling Creation Methods
     """
+
+    def generate_power_labelling(self):
+        args = self.get_arguments()
+        labellings = []
+        for i in product([0,1,2], repeat=len(args)):
+            l = al.Labelling(self)
+            j = 0
+            while j < len(args):
+                if i[j] == 0:
+                    l.label_out(args[j])
+                if i[j] == 1:
+                    l.label_in(args[j])
+                if i[j] == 2:
+                    l.label_undec(args[j])
+                j = j + 1
+            labellings.append(l)
+        return labellings
 
     def generate_blank_labelling(self):
         l = al.Labelling(self)
