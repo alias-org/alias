@@ -8,14 +8,14 @@ class Argument(object):
         self.attacks = set()
 
     def __str__(self):
-        string = '\'' + self.name + '\' : ['
+        string = 'Argument \'' + self.name + '\' : ['
         attcount = 0
         for att in self.attacks:
             attcount = attcount + 1
             if attcount < (len(self.attacks) -1):
-                string = string + '\'%s\', ' %att
+                string = string + '\'%s\', ' %att.name
             else:
-                string = string + '\'%s\'' %att 
+                string = string + '\'%s\'' %att.name 
         string = string + ']'
         return string
 

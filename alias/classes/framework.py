@@ -24,10 +24,10 @@ class ArgumentationFramework(object):
             attcount = 0
             for att in self.framework[arg].attacks:
                 if attcount < (len(self.framework[arg].attacks) - 1):
-                    string = string + ('\'' + att + '\'' + ', ')
+                    string = string + ('\'' + att.name + '\'' + ', ')
                     attcount = attcount + 1
                 else:
-                    string = string + ('\'' + att + '\'')
+                    string = string + ('\'' + att.name + '\'')
             if argcount < (len(self.get_arguments())):
                 string = string + ('], ')
             else:
@@ -70,7 +70,7 @@ class ArgumentationFramework(object):
                     newarg = al.Argument(argumentname, self)
                     self.framework[argumentname] = newarg
                     for l in self.labellings:
-                        l.undefined.add(argumentname)
+                        l.undefargs.add(argumentname)
 
         if isinstance(args, basestring):
             add(args)
@@ -102,6 +102,15 @@ class ArgumentationFramework(object):
                     return
                 else:
                     del self.framework[argumentname]
+                    for l in self.labellings:
+                        if argumentname in l.inargs:
+                            l.inargs.remove(argumentname)
+                        elif argumentname in l.outargs:
+                            l.outargs.remove(argumentname)
+                        elif argumentname in l.undecargs:
+                            l.undecargs.remove(argumentname)
+                        elif argumentname in l.undefargs:
+                            l.undefargs.remove(argumentname)
 
         if isinstance(args, basestring):
             remove(args)
@@ -189,7 +198,7 @@ class ArgumentationFramework(object):
         return l
 
     def generate_all_in(self):
-        l = al.Labelling(self)
+        l = al.Labelling(self, name='All-In')
         for arg in self.get_arguments():
             l.inargs.add(arg)
             l.undefargs.remove(arg)
