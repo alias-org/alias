@@ -20,10 +20,10 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Programming Language :: Python :: 2.7'
     ],
-    install_requires=['pyparsing', 'networkx'],
+    install_requires=['pyparsing'],
     packages=find_packages(exclude=['docs', 'tests*']),
     extras_require={
-        'dev': ['sqlalchemy', 'py2neo'],
+        'dev': ['sqlalchemy', 'py2neo', 'networkx'],
         'test': ['nosetests'],
     },
 )

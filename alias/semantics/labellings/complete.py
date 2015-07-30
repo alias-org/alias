@@ -7,7 +7,7 @@ def labelling_complete(af):
     def find_complete(L):
         illegal = False
         for arg in L.inargs:
-            if L.af.get_arg_obj(arg).is_illegally_in(L):
+            if L.framework.get_arg_obj(arg).is_illegally_in(L):
                 illegal = True
                 break
         if not illegal:
@@ -16,13 +16,13 @@ def labelling_complete(af):
         else:
             sii = set()
             for arg in L.inargs:
-                if L.af.get_arg_obj(arg).is_super_illegally_in(L):
+                if L.framework.get_arg_obj(arg).is_super_illegally_in(L):
                     sii.add(arg)
             if sii:
                 find_complete(L.transition_step(sii.pop()))
             else:
                 for arg in L.inargs:
-                    if L.af.get_arg_obj(arg).is_illegally_in(L):
+                    if L.framework.get_arg_obj(arg).is_illegally_in(L):
                         find_complete(L.transition_step(arg))
 
     find_complete(af.generate_all_in())

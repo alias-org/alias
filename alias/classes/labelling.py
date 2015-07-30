@@ -134,7 +134,7 @@ class Labelling(object):
         l = deepcopy(self)
         l.label_out(x)
         for arg in self.outargs:
-            if l.af.get_arg_obj(arg).is_illegally_out(l):
+            if l.framework.get_arg_obj(arg).is_illegally_out(l):
                 l.label_undec(arg)
         return l
 

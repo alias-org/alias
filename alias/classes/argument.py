@@ -6,16 +6,17 @@ class Argument(object):
         self.name = name
         self.framework = framework
         self.attacks = set()
+        self.attacksref = set()
+
+    def __repr__(self):
+        return '\'' + self.name + '\''
 
     def __str__(self):
         string = 'Argument \'' + self.name + '\' : ['
-        attcount = 0
+        atts = []
         for att in self.attacks:
-            attcount = attcount + 1
-            if attcount < (len(self.attacks) -1):
-                string = string + '\'%s\', ' %att.name
-            else:
-                string = string + '\'%s\'' %att.name 
+            atts.append('\'' + att.name + '\'')
+        string = string + (', '.join(atts))
         string = string + ']'
         return string
 
@@ -35,7 +36,6 @@ class Argument(object):
             raise ArgumentException("Argument does not exist in this framework/labelling.")
         if self.name not in labelling.inargs:
             raise al.LabellingException("Argument is not labelled in.")
-
         allout = True
         for att in labelling.framework.get_attackers(self.name):
             if att in labelling.inargs:

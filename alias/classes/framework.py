@@ -4,7 +4,7 @@ from itertools import product
 
 class ArgumentationFramework(object):
 
-    def __init__(self, name=''):
+    def __init__(self, name=""):
         self.name = name
         self.framework = {}
         self.labellings = []
@@ -13,6 +13,7 @@ class ArgumentationFramework(object):
         return arg in self.framework
 
     def __str__(self):
+        com = ', '
         if self.name != '':
             string = 'ArgumentationFramework \'%s\' : {' %self.name
         else:
@@ -20,14 +21,11 @@ class ArgumentationFramework(object):
         argcount = 0
         for arg in self.get_arguments():
             argcount = argcount + 1
-            string = string + ('\'' + arg + '\'' + ' : [')
-            attcount = 0
-            for att in self.framework[arg].attacks:
-                if attcount < (len(self.framework[arg].attacks) - 1):
-                    string = string + ('\'' + att.name + '\'' + ', ')
-                    attcount = attcount + 1
-                else:
-                    string = string + ('\'' + att.name + '\'')
+            atts = []
+            for a in self.framework[arg].attacks:
+                atts.append(('\'' + a.name + '\''))
+            atts = com.join(atts)
+            string = string + ('\'' + arg + '\'' + ' : [' + atts)
             if argcount < (len(self.get_arguments())):
                 string = string + ('], ')
             else:
@@ -86,12 +84,14 @@ class ArgumentationFramework(object):
                 self.add_argument(att[0])
                 self.add_argument(att[1])
                 self.framework[att[0]].attacks.add(self.framework[att[1]])
+                self.framework[att[0]].attacksref.add(att[1])
         
         if atts:
             for a in atts:
                 self.add_argument(a[0])
                 self.add_argument(a[1])
                 self.framework[a[0]].attacks.add(self.framework[a[1]])
+                self.framework[att[0]].attacksref.add(att[1])
 
     def remove_argument(self, args):
         def remove(argumentname):
