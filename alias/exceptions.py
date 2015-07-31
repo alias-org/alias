@@ -15,3 +15,6 @@ class LabellingException(AliasException):
 
 class ParsingException(AliasException):
     pass
+
+class DbException(AliasException):
+    pass

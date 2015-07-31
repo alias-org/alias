@@ -1,6 +1,6 @@
 import alias as al
 
-class Dbwrapper(object):
+class DbWrapper(object):
 
     def __init__(self):
         try:
@@ -42,27 +42,42 @@ class Dbwrapper(object):
                 collection_class=set)
         })
 
-    def to_sqlite(self, af):
+    def to_sqlite(self, af, path):
+        try:
+            from sqlalchemy import create_engine
+            from sqlalchemy.orm import sessionmaker
+            from sqlalchemy.sql import exists
+        except ImportError:
+            raise ImportError('Interaction with SQL based databases requires SQLAlchemy')
+
+        engine = create_engine('sqlite:///%s' %path)
+        self.metadata.create_all(engine)
+        DBSession = sessionmaker(bind=engine)
+        self.metadata.bind = engine
+        session = DBSession()
+
+        if session.query(exists().where(al.ArgumentationFramework.name == af.name)).scalar():
+            raise al.DbException('Framework with name %s already exists in the database.' %af.name)
+        else:    
+            session.add(af)
+            for arg in af:
+                session.add(af[arg])
+            session.commit()
+            print 'Writing to SQLite database successful.'
+
+    def from_sqlite(self, af, path):
         try:
             from sqlalchemy import create_engine
             from sqlalchemy.orm import sessionmaker
         except ImportError:
             raise ImportError('Interaction with SQL based databases requires SQLAlchemy')
 
-        engine = create_engine('sqlite:///sqlalchemy_example.db')
-        self.metadata.create_all(engine)
-        DBSession = sessionmaker(bind=engine)
-        self.metadata.bind = engine
-        session = DBSession()
-        session.add(af)
-        for arg in af:
-            session.add(af[arg])
-        session.commit()
 
-    def to_mysql(self, af, server, db, u, p):
+    def to_mysql(self, af, server='localhost:3306', db='test', u='', p=''):
         try:
             from sqlalchemy import create_engine
-            from sqlalchemy.orm import sessionmaker
+            from sqlalchemy.orm import sessionmaker, query
+            from sqlalchemy.sql import exists
         except ImportError:
             raise ImportError('Interaction with SQL based databases requires SQLAlchemy')
 
@@ -72,10 +87,39 @@ class Dbwrapper(object):
         DBSession = sessionmaker(bind=engine)
         self.metadata.bind = engine
         session = DBSession()
-        session.add(af)
-        for arg in af:
-            session.add(af[arg])
-        session.commit()
 
-    def to_postgres(self, af):
-        pass
+        if session.query(exists().where(al.ArgumentationFramework.name == af.name)).scalar():
+            raise al.DbException('Framework with name %s already exists in the database.' %af.name)
+        else:    
+            session.add(af)
+            for arg in af:
+                session.add(af[arg])
+            session.commit()
+            print 'Writing to MySQL database successful.'
+
+    def from_mysql(self, af=None, server='localhost:3306', db='test', u='', p=''):
+        try:
+            from sqlalchemy import create_engine
+            from sqlalchemy.orm import sessionmaker
+        except ImportError:
+            raise ImportError('Interaction with SQL based databases requires SQLAlchemy')
+        
+        address = 'mysql://%s:%s@%s/%s' % (u,p,server,db)
+        engine = create_engine(address) 
+        self.metadata.create_all(engine)
+        DBSession = sessionmaker(bind=engine)
+        self.metadata.bind = engine
+        session = DBSession()
+        res = session.query(al.ArgumentationFramework).all()
+        for f in res:
+            print f.id
+
+    def to_postgres(self):
+        """
+        TODO
+        """
+
+    def from_postgres(self):
+        """
+        TODO
+        """

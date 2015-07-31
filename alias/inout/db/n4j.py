@@ -19,7 +19,7 @@ def n4j_connect(dbaddress=None, port=None, u='', p=''):
 
     return graph_db
 
-def to_neo4j(af, dbaddress=None, port=None, u='', p=''):
+def to_neo4j(af, dbaddress='localhost', port=None, u='', p=''):
     try:
         from py2neo import Graph
     except ImportError:
@@ -44,8 +44,9 @@ def to_neo4j(af, dbaddress=None, port=None, u='', p=''):
     add_args(af.get_arguments())
     add_atts(af.get_attacks())
     tx.commit()
+    print 'Write to Neo4J Database Successful'
 
-def from_neo4j(framework, dbaddress=None, port=None, u='', p=''):
+def from_neo4j(framework, dbaddress='localhost', port=None, u='', p=''):
     try:
         from py2neo import Graph
     except ImportError:
