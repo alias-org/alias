@@ -91,7 +91,7 @@ class ArgumentationFramework(object):
                 self.add_argument(a[0])
                 self.add_argument(a[1])
                 self.framework[a[0]].attacks.add(self.framework[a[1]])
-                self.framework[att[0]].attacksref.add(att[1])
+                self.framework[a[0]].attacksref.add(a[1])
 
     def remove_argument(self, args):
         def remove(argumentname):
