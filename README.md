@@ -16,9 +16,10 @@ Grab the source and simply run `python setup.py install`.  This will install the
 
 ## Example
 To create a blank AAF:
-`import alias
-framework = alias.ArgumentationFramework('Example')`
-
+```
+import alias
+framework = alias.ArgumentationFramework('Example')
+```
 Add some arguments:
 `framework.add_argument(['a','b'])`
 
