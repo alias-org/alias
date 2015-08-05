@@ -10,7 +10,7 @@ setup(
     description='ALIAS',
     author='Roberto La Greca',
     license='GNU',
-    url='https://github.com/roberto-lagreca/alias',
+    url='https://github.com/alias-org/alias.git',
     author_email='roberto@robertolagreca.com',
     version='0.1',
     classifiers=[
@@ -23,7 +23,8 @@ setup(
     install_requires=[''],
     packages=find_packages(exclude=['docs', 'tests*']),
     extras_require={
-        'dev': ['pyparsing', 'sqlalchemy', 'py2neo', 'networkx'],
-        'test': ['nosetests'],
+        'inout': ['pyparsing', 'networkx'],
+        'db' : ['sqlalchemy', 'py2neo']
     },
+    tests_require=['nose'],
 )
