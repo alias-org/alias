@@ -91,25 +91,56 @@ class FrameworkTests(TestCase):
         assert set([frozenset(['a', 'c', 'b']), frozenset(['b']), frozenset(['a']), frozenset([]), frozenset(['c', 'b']), frozenset(['a', 'c']), frozenset(['c']), frozenset(['a', 'b'])]).issubset(af.generate_powerset())
 
     def test_arg_set_attacking(self):
-        pass
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d')])
+        assert af.argsP(['a','b']) == set(['b','c'])
 
     def test_arg_set_attackers(self):
-        pass
-
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d')])
+        assert af.argsM(['b','d']) == set(['a','c'])
+        
     def test_arg_set_unattacked(self):
-        pass
-
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d')])
+        assert af.argsU(['a','b']) == set(['a','d'])
+        
     def test_arg_set_defending(self):
-        pass
-
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d')])
+        assert af.argsD(['a']) == set(['a','c'])
+        
     def test_check_conflict_free(self):
-        pass
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d'), ('d','c')])
+        assert af.is_conflict_free(set(['a','c']))
+        assert af.is_conflict_free(set(['a','d']))
+        assert af.is_conflict_free(set(['b','d']))
+
+    def test_check_not_conflict_free(self):
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d'), ('d','c')])
+        assert not af.is_conflict_free(set(['a','b']))
+
 
     def test_check_admissible(self):
-        pass
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d'), ('d','c')])
+        assert af.is_admissible(set(['a','c']))
+        assert af.is_admissible(set(['a','d']))
+
+    def test_check_not_admissible(self):
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d'), ('d','c')])
+        assert not af.is_admissible(set(['b']))
+        assert not af.is_admissible(set(['c']))
 
     def test_check_complete(self):
-        pass
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d'), ('d','c')])
+        assert af.is_complete(set(['a']))
+        assert af.is_complete(set(['a','c']))
+        assert af.is_complete(set(['a','d']))
 
     def test_check_preferred(self):
         pass
