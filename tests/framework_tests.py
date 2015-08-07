@@ -60,6 +60,12 @@ class FrameworkTests(TestCase):
         assert set(['a','b','c','d']).issubset(af.get_arguments())
         assert set([('a','b'), ('b','c'), ('c','d')]).issubset(af.get_attacks())
 
+    def test_att_removal(self):
+        af = al.ArgumentationFramework()
+        af.add_attack(atts=[('a','b'), ('b','c'), ('c','d')])
+        af.remove_attack(('a','b'))
+        assert ('a','b') not in af.get_attacks()
+
     def test_attacking_retrieval(self):
         af = al.ArgumentationFramework()
         af.add_attack(atts=[('a','b'),('a','c'),('a','d')])

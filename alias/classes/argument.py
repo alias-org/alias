@@ -30,6 +30,22 @@ class Argument(object):
         else:
             raise al.FrameworkException('Argument \'%s\' is not attacked by argument \'%s\'' %(arg, self.name))
 
+    def add_attack(self, arg):
+        if isinstance(arg, al.Argument):
+            self.attacks.add(arg)
+            self.attacksref.add(arg.name)
+        elif isinstance(arg, basestring):
+            self.attacks.add(self.framework[arg])
+            self.attacksref.add(arg)
+
+    def remove_attack(self, arg):
+        if isinstance(arg, al.Argument):
+            self.attacks.remove(arg)
+            self.attacksref.remove(arg.name)
+        elif isinstance(arg, basestring):
+            self.attacks.remove(self.framework[arg])
+            self.attacksref.remove(arg)
+
     # Determines whether the argument is legally in within a given labelling
     def is_legally_in(self, labelling):
         if not (labelling.framework.argument_exists(self.name)):

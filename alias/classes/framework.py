@@ -83,15 +83,13 @@ class ArgumentationFramework(object):
             if att[1]:
                 self.add_argument(att[0])
                 self.add_argument(att[1])
-                self.framework[att[0]].attacks.add(self.framework[att[1]])
-                self.framework[att[0]].attacksref.add(att[1])
+                self.framework[att[0]].add_attack(self.framework[att[1]])
         
         if atts:
             for a in atts:
                 self.add_argument(a[0])
                 self.add_argument(a[1])
-                self.framework[a[0]].attacks.add(self.framework[a[1]])
-                self.framework[a[0]].attacksref.add(a[1])
+                self.framework[a[0]].add_attack(self.framework[a[1]])
 
     def remove_argument(self, args):
         def remove(argumentname):
@@ -118,20 +116,20 @@ class ArgumentationFramework(object):
             for arg in args:
                 add(arg)
 
-    def remove_attack(self, att = (None, None), atts = None):
-        """
-        TODO
-        """
+    def remove_attack(self, att=(None, None), atts=None):
+        def remove(a):
+            if a in self.get_attacks():
+                self.framework[a[0]].remove_attack(a[1])
+            else:
+                raise al.FrameworkException('Attack %s does not exist in the framework' %str(a))
 
         if att[0]:
             if att[1]:
-                pass
-        
+                remove(att)
+
         if atts:
             for a in atts:
-                self.add_argument(a[0])
-                self.add_argument(a[1])
-                self.framework[a[0]].attacks.add(a[1])
+                remove(a)
 
     def clear(self):
         self.name = ''
