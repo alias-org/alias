@@ -6,3 +6,4 @@ ALIAS.egg-info
 build
 dist
 .ipynb_checkpoints
+*.swp
