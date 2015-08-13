@@ -1,4 +1,5 @@
 from alias.semantics.labellings.grounded import *
+from alias.semantics.labellings.admissible import *
 from alias.semantics.labellings.preferred import *
 from alias.semantics.labellings.complete import *
 from alias.semantics.labellings.stable import *

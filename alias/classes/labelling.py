@@ -14,6 +14,12 @@ class Labelling(object):
         for arg in self.framework.get_arguments():
         	self.undefargs.add(arg)
 
+    def __eq__(self, other):
+        equal = False
+        if (self.inargs == other.inargs) & (self.outargs == other.outargs) & (self.undecargs == other.undecargs) & (self.undefargs == other.undefargs):
+            equal = True
+        return equal
+
     def __str__(self):
         string = 'Labelling \'%s\' : {in : [' %self.name
 
@@ -133,9 +139,13 @@ class Labelling(object):
     def transition_step(self, x):
         l = deepcopy(self)
         l.label_out(x)
-        for arg in self.outargs:
-            if l.framework.get_arg_obj(arg).is_illegally_out(l):
-                l.label_undec(arg)
+        change = True
+        while change:
+            change = False
+            for arg in deepcopy(l.outargs):
+                if l.framework[arg].is_illegally_out(l):
+                    l.label_undec(arg)
+                    change = True
         return l
 
     def is_complete(self):
