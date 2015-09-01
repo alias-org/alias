@@ -12,10 +12,7 @@ class ApxTests(TestCase):
     @classmethod
     def teardown_class(klass):
         """CLASS_TEARDOWN"""
-        dirpath = "tests/test_files/out"
-        filelist = os.listdir(dirpath)
-        for f in filelist:
-            os.remove(dirpath + '/' + f)
+        os.remove("tests/test_files/out/test_apx.apx")
 
     def setup(self):
         """METHOD_SETUP"""
@@ -49,10 +46,7 @@ class TgfTests(TestCase):
     @classmethod
     def teardown_class(klass):
         """CTEARDOWN"""
-        dirpath = "tests/test_files/out"
-        filelist = os.listdir(dirpath)
-        for f in filelist:
-            os.remove(dirpath + '/' + f)
+        os.remove("tests/test_files/out/test_tgf.tgf")
 
     def setup(self):
         """MSETUP"""
@@ -85,10 +79,7 @@ class DotTests(TestCase):
     @classmethod
     def teardown_class(klass):
         """CTEARDOWN"""
-        dirpath = "tests/test_files/out"
-        filelist = os.listdir(dirpath)
-        for f in filelist:
-            os.remove(dirpath + '/' + f)
+        os.remove("tests/test_files/out/test_dot.dot")
 
     def setup(self):
         """MSETUP"""
@@ -107,7 +98,7 @@ class DotTests(TestCase):
         afwrite.add_attack(('a','b'))
         afwrite.add_attack(('b','c'))
         afwrite.add_attack(('b','d'))
-        al.write_tgf(afwrite, 'tests/test_files/out/test_tgf.tgf')
-        afread = al.read_tgf('tests/test_files/out/test_tgf.tgf')
+        al.write_tgf(afwrite, 'tests/test_files/out/test_dot.dot')
+        afread = al.read_tgf('tests/test_files/out/test_dot.dot')
         assert set(['a','b','c','d']).issubset(afread.get_arguments())
         assert set([('a','b'), ('b','c'),('b','d')]).issubset(afread.get_attacks())
