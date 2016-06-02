@@ -1,4 +1,4 @@
-import alias as alias
+import alias
 
 def extension_complete(af):
     comp = []

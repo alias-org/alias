@@ -1,4 +1,4 @@
-import alias as al
+import alias
 import ntpath
 
 def read_tgf(path):
@@ -23,7 +23,7 @@ def read_tgf(path):
 
     References
     ----------
-    http://en.wikipedia.org/wiki/Trivial_Graph_Format 
+    http://en.wikipedia.org/wiki/Trivial_Graph_Format
     """
 
     try:
@@ -42,18 +42,18 @@ def read_tgf(path):
     nl = Suppress(White("\n"))
 
     graph = Group(ZeroOrMore(arg + nl)) + Suppress("#") + nl + Group(ZeroOrMore(att + nl) + ZeroOrMore(att))
-    
-    
+
+
     f = open(path, 'r')
     f = f.read()
 
     head, tail = ntpath.split(path)
-    framework = al.ArgumentationFramework(tail)
+    framework = alias.ArgumentationFramework(tail)
 
     try:
         parsed = graph.parseString(f)
     except ParseException, e:
-        raise al.ParsingException(e)
+        raise alias.ParsingException(e)
 
     for arg in parsed[0]:
         framework.add_argument(arg)
@@ -80,14 +80,14 @@ def write_tgf(framework, outloc):
 
     Returns
     -------
-    
+
 
     Examples
     --------
 
     References
     ----------
-    http://en.wikipedia.org/wiki/Trivial_Graph_Format 
+    http://en.wikipedia.org/wiki/Trivial_Graph_Format
     """
     f = open(outloc, 'w')
 

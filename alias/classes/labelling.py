@@ -1,4 +1,4 @@
-import alias as al
+import alias
 from copy import deepcopy
 
 class Labelling(object):

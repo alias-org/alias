@@ -1,7 +1,7 @@
-import alias as al
+import alias
 
 class Argument(object):
-    
+
     def __init__(self, name, framework):
         self.name = name
         self.framework = framework
@@ -28,10 +28,10 @@ class Argument(object):
         if arg in self.attacks:
             return self.framework[arg]
         else:
-            raise al.FrameworkException('Argument \'%s\' is not attacked by argument \'%s\'' %(arg, self.name))
+            raise alias.FrameworkException('Argument \'%s\' is not attacked by argument \'%s\'' %(arg, self.name))
 
     def add_attack(self, arg):
-        if isinstance(arg, al.Argument):
+        if isinstance(arg, alias.Argument):
             self.attacks.add(arg)
             self.attacksref.add(arg.name)
         elif isinstance(arg, basestring):
@@ -39,7 +39,7 @@ class Argument(object):
             self.attacksref.add(arg)
 
     def remove_attack(self, arg):
-        if isinstance(arg, al.Argument):
+        if isinstance(arg, alias.Argument):
             self.attacks.remove(arg)
             self.attacksref.remove(arg.name)
         elif isinstance(arg, basestring):
@@ -51,7 +51,7 @@ class Argument(object):
         if not (labelling.framework.argument_exists(self.name)):
             raise ArgumentException("Argument does not exist in this framework/labelling.")
         if self.name not in labelling.inargs:
-            raise al.LabellingException("Argument is not labelled in.")
+            raise alias.LabellingException("Argument is not labelled in.")
         allout = True
         for att in labelling.framework.get_attackers(self.name):
             if att in labelling.inargs:
@@ -67,7 +67,7 @@ class Argument(object):
         if not (labelling.framework.argument_exists(self.name)):
             raise ArgumentException("Argument does not exist in this framework/labelling.")
         if self.name not in labelling.outargs:
-            raise al.LabellingException("Argument is not labelled out.")
+            raise alias.LabellingException("Argument is not labelled out.")
 
         onein = False
         for att in labelling.framework.get_attackers(self.name):
@@ -82,7 +82,7 @@ class Argument(object):
         if not (labelling.framework.argument_exists(self.name)):
             raise ArgumentException("Argument does not exist in this framework/labelling.")
         if self.name not in labelling.undecargs:
-            raise al.LabellingException("Argument is not labelled undecided.")
+            raise alias.LabellingException("Argument is not labelled undecided.")
 
         allout = True
         onein = False
@@ -109,7 +109,7 @@ class Argument(object):
         if not (labelling.framework.argument_exists(self.name)):
             raise ArgumentException("Argument does not exist in this framework/labelling.")
         if self.name not in labelling.inargs:
-            raise al.LabellingException("Argument is not labelled in.")
+            raise alias.LabellingException("Argument is not labelled in.")
 
         sii = False
         if self.is_illegally_in(labelling):
@@ -123,4 +123,4 @@ class Argument(object):
                         sii = True
                         break
 
-        return sii 
+        return sii

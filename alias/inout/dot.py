@@ -1,4 +1,4 @@
-import alias as al
+import alias
 import ntpath
 
 def read_dot(path):
@@ -18,13 +18,13 @@ def read_dot(path):
     --------
 
     References
-    ---------- 
+    ----------
 
     """
 
     try:
         from pyparsing import Word, Literal, alphas, alphanums, nums, OneOrMore
-        from pyparsing import Forward, Optional, Keyword, Group, Suppress, ParseException 
+        from pyparsing import Forward, Optional, Keyword, Group, Suppress, ParseException
     except ImportError:
         raise ImportError("read_dot requires pyparsing")
 
@@ -34,7 +34,7 @@ def read_dot(path):
     # Define DOT grammar
     # Punctuation and keywords
     LBR,RBR,SCOL,COMMA,EQ,LSQ,RSQ,COL = map(Literal, "{};,=[]:")
-    strict,graph,digraph,node,edge,subgraph = map(Keyword, 
+    strict,graph,digraph,node,edge,subgraph = map(Keyword,
         "strict graph digraph node edge subgraph".split())
 
     # Recursive rules
@@ -72,16 +72,16 @@ def read_dot(path):
     try:
         parsed = dot.parseString(f)
     except ParseException, e:
-        raise al.ParsingException(e)
+        raise alias.ParsingException(e)
 
     if parsed['gtype'] == 'graph':
-        raise al.ParsingException('Graph must be a directed graph (digraph).')
+        raise alias.ParsingException('Graph must be a directed graph (digraph).')
 
     if 'gname' in parsed.keys():
-        framework = al.ArgumentationFramework(parsed['gname'])
+        framework = alias.ArgumentationFramework(parsed['gname'])
     else:
         head, tail = ntpath.split(path)
-        framework = al.ArgumentationFramework(tail)
+        framework = alias.ArgumentationFramework(tail)
 
     if 'arg' in parsed.keys():
         for arg in parsed['arg']:

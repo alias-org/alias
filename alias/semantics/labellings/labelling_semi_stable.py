@@ -1,4 +1,4 @@
-import alias as al
+import alias
 import copy
 
 def labelling_semi_stable(af):

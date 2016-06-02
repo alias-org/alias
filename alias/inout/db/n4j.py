@@ -1,4 +1,4 @@
-import alias as al
+import alias
 
 def n4j_connect(dbaddress=None, port=None, u='', p=''):
     try:
@@ -8,7 +8,7 @@ def n4j_connect(dbaddress=None, port=None, u='', p=''):
 
     if dbaddress:
         if port:
-            graph_db = Graph('http://' + u + ':' + p + '@' + dbaddress + ':' + str(port) + '/db/data/') 
+            graph_db = Graph('http://' + u + ':' + p + '@' + dbaddress + ':' + str(port) + '/db/data/')
         else:
             graph_db = Graph('http://' + u + ':' + p + '@' + dbaddress + ':7474' + '/db/data/')
     else:
@@ -52,7 +52,7 @@ def from_neo4j(framework, dbaddress='localhost', port=None, u='', p=''):
     except ImportError:
         raise ImportError("py2neo is required for from_neo4j()")
 
-    af = al.ArgumentationFramework(name = framework)
+    af = alias.ArgumentationFramework(name = framework)
 
     graph_db = n4j_connect(dbaddress, port, u, p)
     argstmt = "MATCH (n:Argument) WHERE n.framework=\"" + framework + "\" RETURN n.name"

@@ -1,9 +1,9 @@
-import alias as al
+import alias
 import json
 
 class D3Encoder(json.JSONEncoder):
     def default(self, o):
-        if isinstance(o, al.ArgumentationFramework):
+        if isinstance(o, alias.ArgumentationFramework):
             args = {}
             arglist = []
             attlist = []
@@ -30,7 +30,7 @@ def write_d3js(obj, path=None):
 def read_d3js(path):
     f = open(path, 'r')
     decoded = json.loads(f.read())
-    af=al.ArgumentationFramework(decoded['name'])
+    af=alias.ArgumentationFramework(decoded['name'])
     for arg in decoded['nodes']:
         af.add_argument(arg)
     for att in decoded['edges']:

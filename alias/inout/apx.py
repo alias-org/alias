@@ -1,4 +1,4 @@
-import alias as al
+import alias
 import ntpath
 
 def read_apx(path):
@@ -17,7 +17,7 @@ def read_apx(path):
     --------
 
     References
-    ---------- 
+    ----------
     http://www.dbai.tuwien.ac.at/research/project/argumentation/systempage/docu.htm
     """
 
@@ -32,7 +32,7 @@ def read_apx(path):
 
     # Define apx grammar
     LPAR,RPAR,DOT,COMMA = map(Suppress,"().,")
-    arg,attack,pref,val,valpref,support = map(Keyword, 
+    arg,attack,pref,val,valpref,support = map(Keyword,
         "arg att pref val valpref support".split())
 
     ID = Word(alphas, alphanums)
@@ -48,18 +48,18 @@ def read_apx(path):
     support_cmd = (support + LPAR + id_pair("support*") + RPAR)
 
     apx = OneOrMore((arg_cmd | attack_cmd | pref_cmd | val_cmd | valpref_cmd | support_cmd) + DOT)
-    
-    
+
+
     f = open(path, 'r')
     f = f.read()
 
     head, tail = ntpath.split(path)
-    framework = al.ArgumentationFramework(tail)
-    
+    framework = alias.ArgumentationFramework(tail)
+
     try:
         parsed = apx.parseString(f)
     except ParseException, e:
-        raise al.ParsingException(e)
+        raise alias.ParsingException(e)
 
     if 'arg' in parsed.keys():
         for arg in parsed['arg']:

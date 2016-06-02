@@ -1,4 +1,4 @@
-import alias as al
+import alias
 import sys
 from itertools import product
 
@@ -65,7 +65,7 @@ class ArgumentationFramework(object):
                 if self.__contains__(argumentname):
                     return
                 else:
-                    newarg = al.Argument(argumentname, self)
+                    newarg = alias.Argument(argumentname, self)
                     self.framework[argumentname] = newarg
                     for l in self.labellings:
                         l.undefargs.add(argumentname)
@@ -84,7 +84,7 @@ class ArgumentationFramework(object):
                 self.add_argument(att[0])
                 self.add_argument(att[1])
                 self.framework[att[0]].add_attack(self.framework[att[1]])
-        
+
         if atts:
             for a in atts:
                 self.add_argument(a[0])
@@ -121,7 +121,7 @@ class ArgumentationFramework(object):
             if a in self.get_attacks():
                 self.framework[a[0]].remove_attack(a[1])
             else:
-                raise al.FrameworkException('Attack %s does not exist in the framework' %str(a))
+                raise alias.FrameworkException('Attack %s does not exist in the framework' %str(a))
 
         if att[0]:
             if att[1]:
@@ -177,7 +177,7 @@ class ArgumentationFramework(object):
         args = self.get_arguments()
         labellings = []
         for i in product([0,1,2], repeat=len(args)):
-            l = al.Labelling(self)
+            l = alias.Labelling(self)
             j = 0
             while j < len(args):
                 if i[j] == 0:
@@ -191,12 +191,12 @@ class ArgumentationFramework(object):
         return labellings
 
     def generate_blank_labelling(self):
-        l = al.Labelling(self)
+        l = alias.Labelling(self)
         self.labellings.append(l)
         return l
 
     def generate_all_in(self):
-        l = al.Labelling(self, name='All-In')
+        l = alias.Labelling(self, name='All-In')
         for arg in self.get_arguments():
             l.inargs.add(arg)
             l.undefargs.remove(arg)
@@ -204,7 +204,7 @@ class ArgumentationFramework(object):
         return l
 
     def generate_all_out(self):
-        l = al.Labelling(self)
+        l = alias.Labelling(self)
         for arg in self.get_arguments():
             l.outargs.add(arg)
             l.undefargs.remove(arg)
@@ -212,7 +212,7 @@ class ArgumentationFramework(object):
         return l
 
     def generate_all_undec(self):
-        l = al.Labelling(self)
+        l = alias.Labelling(self)
         for arg in self.get_arguments():
             l.undecargs.add(arg)
             l.undefargs.remove(arg)
@@ -220,7 +220,7 @@ class ArgumentationFramework(object):
         return l
 
     def generate_grounded(self):
-        return al.generate_grounded(self)
+        return alias.generate_grounded(self)
 
     """
     Set Creation Methods

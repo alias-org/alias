@@ -1,4 +1,4 @@
-import alias as al
+import alias
 
 def to_networkx(af):
     try:
@@ -26,7 +26,7 @@ def from_networkx(n):
     except AssertionError:
         raise AssertionError("Input must be NetworkX DiGraph()")
 
-    af = al.ArgumentationFramework()
+    af = alias.ArgumentationFramework()
 
     for node in n.nodes():
         af.add_argument(node)

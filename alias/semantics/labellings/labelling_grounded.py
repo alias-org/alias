@@ -1,4 +1,4 @@
-import alias as al
+import alias
 
 def labelling_grounded(af):
     l = af.generate_blank_labelling()

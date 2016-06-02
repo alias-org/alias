@@ -1,4 +1,4 @@
-import alias as al
+import alias
 
 def labelling_complete(af):
     complete = []
@@ -36,7 +36,7 @@ def labelling_complete(af):
             for arg in L.inargs:
                 if L.framework.get_arg_obj(arg).is_illegally_in(L):
                     find_complete(L.transition_step(arg))
-                        
+
     find_complete(af.generate_all_in())
     # Consider the all-undec labelling
     undec = False

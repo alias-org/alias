@@ -1,4 +1,4 @@
-import alias as al
+import alias
 
 def draw_framework(af, labelling=None):
     """
@@ -16,8 +16,8 @@ def draw_framework(af, labelling=None):
     except ImportError:
         raise ImportError("Matplotlib required for draw_framework")
 
-    n = al.to_networkx(af)
-    
+    n = alias.to_networkx(af)
+
     if labelling:
         colors = ['g'] * len(labelling.inargs) + ['r'] * len(labelling.outargs) + ['y'] * len(labelling.undecargs)
         nl = list(labelling.inargs)

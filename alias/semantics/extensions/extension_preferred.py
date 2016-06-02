@@ -1,7 +1,7 @@
-import alias as al
+import alias
 
 def extension_preferred(af):
-    comp = al.extension_complete(af)
+    comp = alias.extension_complete(af)
     pref = []
     for c in comp:
         subset = False

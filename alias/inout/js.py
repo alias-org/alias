@@ -1,15 +1,15 @@
 import json
-import alias as al
+import alias
 
 class JsEncoder(json.JSONEncoder):
     def default(self, o):
-        if isinstance(o, al.ArgumentationFramework):
+        if isinstance(o, alias.ArgumentationFramework):
             arglist = []
             for arg in o.framework.values():
                 arglist.append({"name" : arg.name, "attacks" : list(arg.attacksref)})
             encoded = {"name" : o.name, "arguments": arglist}
             return encoded
-        if isinstance(o, al.Argument):
+        if isinstance(o, alias.Argument):
             encoded = {"name" : o.name, "attacks" : list(o.attacksref)}
             return encoded
         return json.JSONEncoder.default(self, o)
@@ -24,7 +24,7 @@ def write_json(obj, path=None):
 def read_json(path):
     f = open(path, 'r')
     decoded = json.loads(f.read())
-    af = al.ArgumentationFramework(decoded['name'])
+    af = alias.ArgumentationFramework(decoded['name'])
     for arg in decoded['arguments']:
         af.add_argument(arg['name'])
         for att in arg['attacks']:

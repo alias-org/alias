@@ -1,4 +1,4 @@
-import alias as al
+import alias
 
 class DbWrapper(object):
 
@@ -27,15 +27,15 @@ class DbWrapper(object):
             Column('attacker_id', Integer, ForeignKey('argument.id')),
             Column('target_id', Integer, ForeignKey('argument.id')))
 
-        mapper(al.ArgumentationFramework, self.framework, properties={
-            'argument' : relationship(al.Argument, backref='framework'),
-            'arguments' : relationship(al.Argument,
+        mapper(alias.ArgumentationFramework, self.framework, properties={
+            'argument' : relationship(alias.Argument, backref='framework'),
+            'arguments' : relationship(alias.Argument,
                 collection_class=attribute_mapped_collection('name'),
                 cascade="all, delete-orphan")
         })
 
-        mapper(al.Argument, self.argument, properties={
-            'attacks' : relationship(al.Argument,
+        mapper(alias.Argument, self.argument, properties={
+            'attacks' : relationship(alias.Argument,
                 secondary=self.attack,
                 primaryjoin=self.argument.c.id==self.attack.c.attacker_id,
                 secondaryjoin=self.argument.c.id==self.attack.c.target_id,
@@ -56,9 +56,9 @@ class DbWrapper(object):
         self.metadata.bind = engine
         session = DBSession()
 
-        if session.query(exists().where(al.ArgumentationFramework.name == af.name)).scalar():
-            raise al.DbException('Framework with name %s already exists in the database.' %af.name)
-        else:    
+        if session.query(exists().where(alias.ArgumentationFramework.name == af.name)).scalar():
+            raise alias.DbException('Framework with name %s already exists in the database.' %af.name)
+        else:
             session.add(af)
             for arg in af:
                 session.add(af[arg])
@@ -82,15 +82,15 @@ class DbWrapper(object):
             raise ImportError('Interaction with SQL based databases requires SQLAlchemy')
 
         address = 'mysql://%s:%s@%s/%s' % (u,p,server,db)
-        engine = create_engine(address) 
+        engine = create_engine(address)
         self.metadata.create_all(engine)
         DBSession = sessionmaker(bind=engine)
         self.metadata.bind = engine
         session = DBSession()
 
-        if session.query(exists().where(al.ArgumentationFramework.name == af.name)).scalar():
-            raise al.DbException('Framework with name %s already exists in the database.' %af.name)
-        else:    
+        if session.query(exists().where(alias.ArgumentationFramework.name == af.name)).scalar():
+            raise alias.DbException('Framework with name %s already exists in the database.' %af.name)
+        else:
             session.add(af)
             for arg in af:
                 session.add(af[arg])
@@ -103,14 +103,14 @@ class DbWrapper(object):
             from sqlalchemy.orm import sessionmaker
         except ImportError:
             raise ImportError('Interaction with SQL based databases requires SQLAlchemy')
-        
+
         address = 'mysql://%s:%s@%s/%s' % (u,p,server,db)
-        engine = create_engine(address) 
+        engine = create_engine(address)
         self.metadata.create_all(engine)
         DBSession = sessionmaker(bind=engine)
         self.metadata.bind = engine
         session = DBSession()
-        res = session.query(al.ArgumentationFramework).all()
+        res = session.query(alias.ArgumentationFramework).all()
         for f in res:
             print f.id
 
